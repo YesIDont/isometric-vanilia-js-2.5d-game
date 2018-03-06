@@ -123,6 +123,7 @@ function generateMap(
 // Terrain generators
 //----------------------------------------
 generateMap.prototype.makeHoles = function(){
+  var that = this;
   if(typeof this.randomTile !== undefined) {
     for(i = 0; i < this.howManyHoles; i++) {
       var rnd = that.randomTile();
@@ -131,6 +132,7 @@ generateMap.prototype.makeHoles = function(){
   }
 };
 generateMap.prototype.makeBumps = function(){
+  var that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyBumbs; i++) {
         var rnd = that.randomTile();
@@ -140,6 +142,7 @@ generateMap.prototype.makeBumps = function(){
   }   
 };
 generateMap.prototype.makeHighBump = function(){
+  var that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyHills; i++) {
         var rnd = that.randomTile();
