@@ -1,6 +1,6 @@
 // Create the canvas
 // ===========================================================
-var layer1 = document.createElement("canvas"),
+let layer1 = document.createElement("canvas"),
     layer2 = document.createElement("canvas"),
     layer3 = document.createElement("canvas"),
     layer4 = document.createElement("canvas"),
@@ -10,7 +10,7 @@ var layer1 = document.createElement("canvas"),
     canvasWidth, canvasHeight, canvasWidthHalf, canvasHeightHalf, xMouse, yMouse;
 
     // below is used when dynamicly creting css styles:
-    // head variable alows to refrence html head element
+    // head letiable alows to refrence html head element
     // dynamicStyle is a style sheet that will be appended to html head space
     head = document.head || document.getElementsByTagName('head')[0],
     dynamicStyle = document.createElement('style');
@@ -50,7 +50,7 @@ function setCanvas() {
   layer3.width = canvasWidth;
   layer3.height = canvasHeight;
   
-  var vignette = document.querySelector("#vignette");
+  let vignette = document.querySelector("#vignette");
   vignette.width = canvasWidth;
   vignette.height = canvasHeight;
 };
@@ -68,9 +68,9 @@ window.addEventListener("resize", setCanvas, false);
 // Set animation engine width requestAnimationFrame
 // ===========================================================
 (function() {
-  var lastTime = 0;
-  var vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+  let lastTime = 0;
+  let vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
     window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
                                || window[vendors[x]+'CancelRequestAnimationFrame'];
@@ -78,9 +78,9 @@ window.addEventListener("resize", setCanvas, false);
 
   if (!window.requestAnimationFrame)
     window.requestAnimationFrame = function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+        let currTime = new Date().getTime();
+        let timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        let id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
           timeToCall);
         lastTime = currTime + timeToCall;
         return id;
@@ -95,7 +95,7 @@ window.addEventListener("resize", setCanvas, false);
 
 // generate map
 // ===========================================================
-var map = new generateMap(
+let map = new generateMap(
   40,    // horizontal number of tiles
   80,    // vertical number of tiles
   74,       // tile twidth
@@ -111,7 +111,7 @@ var map = new generateMap(
 
 
 // create player
-var player = new createCharacter(
+let player = new createCharacter(
   4 // movment speed
 );
 
@@ -123,13 +123,13 @@ player.collisionModel = new player.calcCollisionModel(map, player);
 
 // create UI
 // element, text, css, link, path
-var buttonOptions = new newUiItem("a", "", "button-options", "#", "ico-options.svg", "ico-options-h.svg");
-var selectTool = new newUiItem("a", "", "button-select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg");
+let buttonOptions = new newUiItem("a", "", "button-options", "#", "ico-options.svg", "ico-options-h.svg");
+let selectTool = new newUiItem("a", "", "button-select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg");
 
 
 // Keyboard controls
 // ===========================================================
-var keysDown = [];
+let keysDown = [];
 
 function pressKey(e) {
   keysDown[e.keyCode] = true;
@@ -159,7 +159,7 @@ document.onmousemove = function (e) {
 
 // The main game loop
 // ===========================================================
-var animate = function () {
+let animate = function () {
   // this allows for acurate canvas clean,
   // without it canvas would be cleaned based on it's offset position
   ctx1.setTransform(1, 0, 0, 1, 0, 0);
