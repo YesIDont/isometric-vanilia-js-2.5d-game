@@ -1,5 +1,5 @@
 // links of images used for tiles
-var grass = new Image(),
+let grass = new Image(),
     dirt = new Image(),
     mud = new Image(),
     water = new Image();
@@ -31,7 +31,7 @@ function generateMap(
     clipByTiles
     ) {
 
-  var that = this;
+  let that = this;
   // Map basic properties
   this.xTilesNumber = xTilesNumber; // how many tiles horizontaly
   this.yTilesNumber = yTilesNumber; // how many tiles verticaly
@@ -104,14 +104,10 @@ function generateMap(
   
 
   this.randomTile = function(){
-    var c = Math.floor((Math.random() * that.yTilesNumber));
-    var r = Math.floor((Math.random() * that.xTilesNumber));    
+    let c = Math.floor((Math.random() * that.yTilesNumber));
+    let r = Math.floor((Math.random() * that.xTilesNumber));    
     return that.tiles[c][r]
-  };
-
-  
-
-  
+  };  
 
   this.makeHoles();
   this.makeBumps();
@@ -123,42 +119,42 @@ function generateMap(
 // Terrain generators
 //----------------------------------------
 generateMap.prototype.makeHoles = function(){
-  var that = this;
+  let that = this;
   if(typeof this.randomTile !== undefined) {
     for(i = 0; i < this.howManyHoles; i++) {
-      var rnd = that.randomTile();
+      let rnd = that.randomTile();
       rnd.z += 20;
     }
   }
 };
 generateMap.prototype.makeBumps = function(){
-  var that = this;
+  let that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyBumbs; i++) {
-        var rnd = that.randomTile();
+        let rnd = that.randomTile();
         rnd.z += -20;
         // rnd.type = 4;
       }      
   }   
 };
 generateMap.prototype.makeHighBump = function(){
-  var that = this;
+  let that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyHills; i++) {
-        var rnd = that.randomTile();
+        let rnd = that.randomTile();
         rnd.z -= 67;
       };
     }
 };
 generateMap.prototype.makeWall = function(){
-  var that = this;
-    var r = Math.floor((Math.random() * that.yTilesNumber));
-    var c = Math.floor((Math.random() * that.xTilesNumber));
+  let that = this;
+    let r = Math.floor((Math.random() * that.yTilesNumber));
+    let c = Math.floor((Math.random() * that.xTilesNumber));
     // wlal lenght
-    var l = Math.floor((Math.random() * 30));
+    let l = Math.floor((Math.random() * 30));
 
     // Direction: 0 face bottom, 1 left bottom, 2 left, 3 left top, 4 top, 5 right top, 6 right, 7 right bottom
-    var d = Math.floor((Math.random() * 8));
+    let d = Math.floor((Math.random() * 8));
 
     switch(d){
       case 0:
@@ -198,7 +194,7 @@ generateMap.prototype.makeWall = function(){
 // writeTilesBase creates for each tile vector base which will be used
 // to calculate collision with player and other character
 generateMap.prototype.calculateTilesBase = function(){
-  var that = this;
+  let that = this;
   for (r = 0; r < that.yTilesNumber; r++) {
     for(c = 0; c < that.xTilesNumber; c++) {
       that.tiles[r][c].base = new P(new V(that.tiles[r][c].x, that.tiles[r][c].y), [
@@ -212,7 +208,7 @@ generateMap.prototype.calculateTilesBase = function(){
 };
 
 generateMap.prototype.updateTilesOutside = function() {
-  var that = this;
+  let that = this;
   that.tilesOutsideCanvas.top = Math.floor(Math.abs(that.offsetTopLeft.y) / that.tileHeightHalf);
   that.tilesOutsideCanvas.right = Math.floor(that.offsetBottomRight.x / that.tileWidth);
   that.tilesOutsideCanvas.bottom = Math.floor(that.offsetBottomRight.y / that.tileHeightHalf);
@@ -221,7 +217,7 @@ generateMap.prototype.updateTilesOutside = function() {
 
 // start position calculates offset for starting map position and appends it to all tiles position
 generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosition_y, playerObject) {
-  var that = this;
+  let that = this;
 
   // default: left, top
   if(startPosition_x === "left" &&
@@ -247,7 +243,7 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
 };
 
 generateMap.prototype.cameraUpdate = function (mapObject, x, y){
-  var m = mapObject;
+  let m = mapObject;
 
   // this function allows camera (canvas) to follow point with x and y coordinates, for example - the player character 
 

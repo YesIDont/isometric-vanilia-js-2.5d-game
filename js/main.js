@@ -101,8 +101,8 @@ let map = new generateMap(
   74,       // tile twidth
   40,       // tile heigh
   0,        // number of holes
-  1200,        // number of bumbs
-  10,          // number of high bumbs
+  0, // 1200,        // number of bumbs
+  0, // 10,          // number of high bumbs
   "center",  // map starting x position
   "center",   // map starting y position
   0           // number of tiles on the outside of map to clip out of camera (canvas) movment area
