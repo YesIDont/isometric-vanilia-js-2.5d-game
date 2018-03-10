@@ -104,11 +104,11 @@ function generateMap(
   
 
   this.randomTile = function(){
-    let c = Math.floor((Math.random() * that.yTilesNumber));
-    let r = Math.floor((Math.random() * that.xTilesNumber));    
+    let c = Math.floor( (Math.random() * that.yTilesNumber) );
+    let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-
+  this.terrainShape();
   this.makeHoles();
   this.makeBumps();
   this.makeHighBump();
@@ -116,8 +116,18 @@ function generateMap(
 };
 
 
-// Terrain generators
+// Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
+generateMap.prototype.terrainShape = function(){
+  let that = this;
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
+      let rndLevel = Math.floor( (Math.random() * 10) );
+      let rndSign = Math.random() < 0.5 ? -1 : 1;
+      that.tiles[r][c].z = rndSign > 0 ? rndLevel : -rndLevel;
+    }
+  }
+};
 generateMap.prototype.makeHoles = function(){
   let that = this;
   if(typeof this.randomTile !== undefined) {

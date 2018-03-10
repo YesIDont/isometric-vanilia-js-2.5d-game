@@ -45,12 +45,9 @@ function fillSelectedTile(ctx){
   var c = Math.floor((xMouse + Math.abs(map.offsetTopLeft.x)) / map.tileWidth);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.translate(map.offsetTopLeft.x, map.offsetTopLeft.y);
-  map.fillOneTileBase(
-    ctx,
-    "rgba(0, 0, 255, 0.4)",
-    r,
-    c
-  );
+
+  map.fillOneTileBase( ctx, "rgba(0, 0, 255, 0.4)", r, c );
+  
   customMessage(ctx, "r: " + r + ", c: " + c, xMouse, yMouse, 20,  -20, 24, true);
 }
 

@@ -24,69 +24,84 @@ Current features:
   	- calculates tile offset for rendering area, allowing to rener only tiles visible on screen
   	- holds methods running on the map generation stage - generators
 - full viewport animation for all devices
+- using canvas as camera and translate of canvas to update all coordinates
 - auto adjust of vieport size after changing deivce position or resizing window (buggy)
+- HTML UI, for now two simple buttons
 
 Current demo:
 http://monsterdesign.pl/soletaken/
 
 
+Now i'm working on:
+unified render loop on one canvas, based on z property (map level of each object on the map)
+
+
 To do:
-- HTML UI
-	- dev tools
-	- fog of war!
-	- game UI
-		- player character stats
-		- active pause
+******
+HTML UI
+- dev tools
+- fog of war!
+- game UI
+	- player character stats
+	- active pause
 
-- controls
-	- mouse control
-	- mobile touch control
-	- key bindings
+controls
+- mouse control
+- mobile touch control
+- key bindings
+- moving camera with mouse (partialy, restricted movment)
+
+optimisation
+- compressed images
+- FPS control
+- partial screen image clean istead of cleanning all canvas layers before drawing next frame
+- 
+
+generators
+- terrain
+	- land, island, flying island
+	- terrain level
+	- stones: small, huge, paile of rocks, big fuck of rocks
+	- trees
+	- grass
+	- flowers
+	- water: ponds, rivers, streams, lakes
+- buildings
+	- well
+	- ruins
 	- 
 
-- optimisation
-	- unified render loop
-	- compressed images
-	- FPS control
-	- partial screen image clean istead of cleanning all canvas layers before drawing next frame
-	- 
+NPCs
+- monsters
+- lesser gods
+- gods
+- 
 
-- generators
-	- terrain
-		- land, island, flying island
-		- terrain level
-		- stones: small, huge, paile of rocks, big fuck of rocks
-		- trees
-		- grass
-		- flowers
-		- water: ponds, rivers, streams, lakes
-	- buildings
-		- well
-		- ruins
-		- 
+render
+- unified render loop on one canvas, based on z property (map level of each object on the map)
 
-- NPCs
-	- monsters
-	- lesser gods
-	- gods
-	- 
+graphics
+- shit load of tiles
+- light
+- sprites
+- static elements (buildings, etc)
+- 
 
-- graphics
-	- shit load of tiles
-	- light
-	- sprites
-	- static elements (buildings, etc)
-	- 
+character generator
+- stats: dice roll for D&D 3.5 attributes
+- skills: not to many
+- trumps, flaws
+- looks
+- proffesion: soldier, mercenary, mage, druid, etc
+- 
 
-- character generator
-	- stats: dice roll for D&D 3.5 attributes
-	- skills: not to many
-	- trumps, flaws
-	- looks
-	- proffesion: soldier, mercenary, mage, druid, etc
-	- 
+weather
+- rain
+- fog
+- 
 
-- weather
-	- rain
-	- fog
-	- 
+sounds:
+- voices
+- sourounding (ambient)
+- music
+- interactions

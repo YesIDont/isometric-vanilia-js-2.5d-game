@@ -3,7 +3,6 @@
 let layer1 = document.createElement("canvas"),
     layer2 = document.createElement("canvas"),
     layer3 = document.createElement("canvas"),
-    layer4 = document.createElement("canvas"),
     ctx1 = layer1.getContext("2d"),
     ctx2 = layer2.getContext("2d"),
     ctx3 = layer3.getContext("2d"),
@@ -101,8 +100,8 @@ let map = new generateMap(
   74,       // tile twidth
   40,       // tile heigh
   0,        // number of holes
-  0, // 1200,        // number of bumbs
-  0, // 10,          // number of high bumbs
+  0, //1200,        // number of bumbs
+  0, //10,          // number of high bumbs
   "center",  // map starting x position
   "center",   // map starting y position
   0           // number of tiles on the outside of map to clip out of camera (canvas) movment area
@@ -112,7 +111,7 @@ let map = new generateMap(
 
 // create player
 let player = new createCharacter(
-  4 // movment speed
+  3 // movment speed
 );
 
 
@@ -175,7 +174,7 @@ let animate = function () {
 
   player.collisionModel.testPosition(map, player);  
   player.move(map, player);
-  map.cameraUpdate(map, player.x, player.y);  
+  map.cameraUpdate(map, player.x, player.y);
   
   player.animate(ctx2);
 

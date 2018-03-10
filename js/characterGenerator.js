@@ -1,21 +1,21 @@
 // Player character / NPC / monster creator
 
-// var playerSprite = new Image();
+// let playerSprite = new Image();
 // playerSprite.src = "https://github.com/lostdecade/simple_canvas_game/blob/master/images/hero.png?raw=true";
 
 function createCharacter(playerSpeedInPx){
-  var that = this;
+  let that = this;
 
   this.spriteSheet = {
     // path, x, y, rows, columns, frames number, scale in %, type, holdTime
     idle: new createSprite(
       // path
       "img/characters/player-idle.png",      
-      3, -11,     // x and y pos of animation (top left corner)      
+      -9, -35,     // x and y pos of animation (top left corner), for 100% scale of sprite: 3, -11
       8, 4,       // rows, columns   
       4,          // number of frames in row to animate         
       8,         // dalay in frames without sprite frame update
-      100,              // scale in %      
+      82,              // scale in %      
       "breathing",     // type - for now: simple (from left to right), and breathing (left to right, hold and back in revers order)
       26,              // hold time for breathing animation
       // array of directions
@@ -26,11 +26,11 @@ function createCharacter(playerSpeedInPx){
     run: new createSprite(
       // path
       "img/characters/player-run.png",
-      3, -11,     // x and y pos of animation (top left corner)      
+      -9, -35,     // x and y pos of animation (top left corner)      
       8, 8,       // rows, columns   
       8,          // number of rames in row to animate         
       6,         // dalay in fframes without sprite frame update
-      100,              // scale in %      
+      82,              // scale in %      
       "simple",     // type - for now: simple (from left to right), and breathing (left to right, hold and back in revers order)
       0,              // hold time for breathing animation
       [6, 7, 0, 1, 2, 3, 4, 5]   
@@ -86,12 +86,12 @@ createCharacter.prototype.startPosition = function(xS, yS) {
 };
 
 createCharacter.prototype.animate = function(ctx) {
-  var p = this;
-  var run = p.spriteSheet.run;
-  var idle = p.spriteSheet.idle;
-  var x = this.x;
-  var y = this.y;
-  var z = this.z;
+  let p = this;
+  let run = p.spriteSheet.run;
+  let idle = p.spriteSheet.idle;
+  let x = this.x;
+  let y = this.y;
+  let z = this.z;
 
   // change sprite direction depending on key configuration pressed
   if(p.yV > 0 && p.xV === 0) {
@@ -128,7 +128,7 @@ createCharacter.prototype.animate = function(ctx) {
 };
 
 createCharacter.prototype.pinPoint = function(ctx, mapObject, color) {
-  var that = this;
+  let that = this;
     ctx.strokeStyle = color;
     ctx.lineWidth = 1;
 
@@ -177,8 +177,8 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
   */
   // numbers of tiles used to offset tile array loop
   this.areaDimensions = {
-    width: 2.5 * mapObject.tileWidth , // half of the area in x tiles wide
-    height: 2.5 * mapObject.tileHeight, // half of the area in x tiles tall
+    width: 1.5 * mapObject.tileWidth , // half of the area in x tiles wide
+    height: 2 * mapObject.tileHeight, // half of the area in x tiles tall
   };
   this.area = {
     points: {
@@ -241,9 +241,9 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
   this.response = "";
 
   this.areaLoop = function(mapObject, playerObject, callback) {
-    var m = mapObject;
-    var p = playerObject;
-    var cm = p.collisionModel;
+    let m = mapObject;
+    let p = playerObject;
+    let cm = p.collisionModel;
 
     // loop through rows of tiles of the layer that player is currently on
     // but only through tiles next to player
@@ -272,9 +272,9 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
   };
 
   this.drawArea = function(mapObject, playerObject, ctx) {
-    var m = mapObject;
-    var p = playerObject;
-    var cm = p.collisionModel;
+    let m = mapObject;
+    let p = playerObject;
+    let cm = p.collisionModel;
 
     // loop through rows of tiles of the layer that player is currently on
     // but only through tiles next to player
@@ -297,13 +297,13 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
 
                 m.fillOneTileBase(ctx, "rgba(89, 178, 234, 0.3)", r, c);
 
-                if(m.tiles[r][c].z !== p.z) {
+                if( m.tiles[r][c].z !== p.z ) {
                   m.fillOneTileBase(ctx, "rgba(255, 0, 0, 0.4)", r, c);
                 }
-                var player = cm.base.poly;
-                var tile = m.tiles[r][c].base;
+                let player = cm.base.poly;
+                let tile = m.tiles[r][c].base;
 
-                var response = new SAT.Response();
+                let response = new SAT.Response();
                 response.clear();
 
                 // test collision
@@ -321,38 +321,38 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
   };
 
   this.testPosition = function(mapObject, playerObject) {
-    var that = this;
-    var m = mapObject;
-    var p = playerObject;
-    var cm = p.collisionModel;
+    let that = this;
+    let m = mapObject;
+    let p = playerObject;
+    let cm = p.collisionModel;
 
     // loop through rows of tiles of the layer that player is currently on
     // but only through tiles next to player
     for(r = cm.area.top; r < m.tiles.length - cm.area.bottom; r++) {
 
-      // proceed only if tiles are in range of array lenght, offset can be nagative and would break the loop
+      // proceed only if tiles are in range of tiles array lenght, offset can be nagative and would break the loop
       if(r >= 0 && r < m.tiles.length) {
 
         // loop through narrowed range of columns ir row
         for(c = cm.area.left; c < m.tiles[r].length - cm.area.right; c++) {
 
-          // proceed only if tiles are in range of array lenght
+          // proceed only if tiles are in range of tiles array lenght
           if(c >= 0 && c < m.tiles[r].length) {
 
-            // continue only if the tiles are entirely in the collision check area
+            // continue only if tile is entirely in the collision check area
             if(m.tiles[r][c].x > cm.area.points.topLeft.x &&
               m.tiles[r][c].x + m.tileWidth < cm.area.points.bottomRight.x &&
               m.tiles[r][c].y > cm.area.points.topLeft.y &&
               m.tiles[r][c].y + m.tileHeight < cm.area.points.bottomRight.y) {
 
-                // continue if given tile is on different map level than player
-                if(m.tiles[r][c].z !== p.z) {
+                // continue to SAT test if given tile is on different map level +/- 5 than player
+                if( m.tiles[r][c].z !== p.z ) {
 
                   // set variables for collision test
-                  var player = cm.base.poly;
-                  var tile = m.tiles[r][c].base;
+                  let player = cm.base.poly;
+                  let tile = m.tiles[r][c].base;
 
-                  var response = new SAT.Response();
+                  let response = new SAT.Response();
                   response.clear();
 
                   // test collision
@@ -360,9 +360,9 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
 
                   // counter movment if collision detected
                   if(p.collisionDetected) {
-                    var model = p.collisionModel;
-                    var rex = Math.round(response.overlapV.x);
-                    var rey = Math.round(response.overlapV.y);
+                    let model = p.collisionModel;
+                    let rex = Math.round(response.overlapV.x);
+                    let rey = Math.round(response.overlapV.y);
 
                     // player position
                     p.x -= rex;
@@ -382,10 +382,10 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                 // if this tile is on the same level
                 } else {
                   // set variables for collision test
-                  var player = cm.base.poly;
-                  var tile = m.tiles[r][c].base;
+                  let player = cm.base.poly;
+                  let tile = m.tiles[r][c].base;
 
-                  var response = new SAT.Response();
+                  let response = new SAT.Response();
                   response.clear();
 
                   // test collision
@@ -407,18 +407,18 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
     };
 
   this.singleTileTest = function(mapObject, playerObject, r, c) {
-    var that = this;
-    var m = mapObject;
-    var p = playerObject;
-    var cm = p.collisionModel;
+    let that = this;
+    let m = mapObject;
+    let p = playerObject;
+    let cm = p.collisionModel;
 
-    var bol = false;
+    let bol = false;
 
     // set variables for collision test
-    var player = cm.base.poly;
-    var polygon = m.tiles[r][c].base;
+    let player = cm.base.poly;
+    let polygon = m.tiles[r][c].base;
 
-    var response = new SAT.Response();
+    let response = new SAT.Response();
     response.clear();
 
     // test collision
@@ -433,8 +433,8 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
 };
 
 createCharacter.prototype.move = function(mapObject, playerObject) {
-  var p = playerObject;
-  var m = mapObject;  
+  let p = playerObject;
+  let m = mapObject;  
   
   // reset velocity build up in the last frame
   p.xV = 0;
