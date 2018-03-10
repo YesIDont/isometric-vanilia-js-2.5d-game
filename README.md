@@ -1,6 +1,8 @@
 # Soletaken
 This is game based on tiles in isometric view.
 
+******
+
 Current features:
 - pure HTML, CSS and JavaScript
 - adjustable map size allowing to specify number of tiles
@@ -28,16 +30,20 @@ Current features:
 - auto adjust of vieport size after changing deivce position or resizing window (buggy)
 - HTML UI, for now two simple buttons
 
+******
+
 Current demo:
 http://monsterdesign.pl/soletaken/
 
+******
 
 Now i'm working on:
 unified render loop on one canvas, based on z property (map level of each object on the map)
 
+******
 
 To do:
-******
+
 HTML UI
 - dev tools
 - fog of war!
