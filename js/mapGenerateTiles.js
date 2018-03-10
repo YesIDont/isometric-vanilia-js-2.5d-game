@@ -37,6 +37,7 @@ generateMap.prototype.createLayer = function() {
         x: that.calculateTile_x(r, c),
         y: that.calculateTile_y(r, c),
         z: 0,
+        layer: 0, // 0 layer is drawn below player's sprite, 1 layer is drawn above player's sprite
         canWalkOnIt: true,
         playerStandsOnIt: false,
         // randomly chooses one of four tile types and if Island map type is enabled - makes edge of map water

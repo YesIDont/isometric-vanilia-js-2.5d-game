@@ -14,10 +14,10 @@ function createCharacter(playerSpeedInPx){
       -9, -35,     // x and y pos of animation (top left corner), for 100% scale of sprite: 3, -11
       8, 4,       // rows, columns   
       4,          // number of frames in row to animate         
-      8,         // dalay in frames without sprite frame update
+      24,         // dalay in frames without sprite frame update
       82,              // scale in %      
       "breathing",     // type - for now: simple (from left to right), and breathing (left to right, hold and back in revers order)
-      26,              // hold time for breathing animation
+      36,              // hold time for breathing animation
       // array of directions
       // order: 0 face bottom, 1 left bottom, 2 left, 3 left top, 4 top, 5 right top, 6 right, 7 right bottom
       // numbers show how many frame height will be multiplied to get offset for one animation

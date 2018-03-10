@@ -108,7 +108,7 @@ function generateMap(
     let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-  this.terrainShape();
+  // this.terrainShape();
   this.makeHoles();
   this.makeBumps();
   this.makeHighBump();
@@ -118,7 +118,7 @@ function generateMap(
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
-generateMap.prototype.terrainShape = function(){
+generateMap.prototype.terrainShape = function() {
   let that = this;
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
@@ -137,17 +137,20 @@ generateMap.prototype.makeHoles = function(){
     }
   }
 };
-generateMap.prototype.makeBumps = function(){
+generateMap.prototype.makeBumps = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyBumbs; i++) {
         let rnd = that.randomTile();
-        rnd.z += -20;
-        // rnd.type = 4;
+        rnd.z -= 20;
       }      
   }   
 };
-generateMap.prototype.makeHighBump = function(){
+generateMap.prototype.moveOneTile = function(r, c, z) {
+  let that = this;
+  that.tiles[r][c].z = z;
+};
+generateMap.prototype.makeHighBump = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < this.howManyHills; i++) {
@@ -156,7 +159,7 @@ generateMap.prototype.makeHighBump = function(){
       };
     }
 };
-generateMap.prototype.makeWall = function(){
+generateMap.prototype.makeWall = function() {
   let that = this;
     let r = Math.floor((Math.random() * that.yTilesNumber));
     let c = Math.floor((Math.random() * that.xTilesNumber));
@@ -169,7 +172,7 @@ generateMap.prototype.makeWall = function(){
     switch(d){
       case 0:
         for(i = 0; i < l; i++) {
-          if(r !== undefined && c !== undefined){
+          if( r !== undefined && c !== undefined ) {
             that.tiles[r - 1][c + i].z -= 64;
             r -= 1;
           }
@@ -247,8 +250,8 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
 
   // after calculating offsets this will apend thier values to all tiles
   ctx1.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
-  ctx2.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
-  ctx3.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  // ctx2.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  // ctx3.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
   
 };
 

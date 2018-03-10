@@ -1,7 +1,7 @@
 # Soletaken
 This is game based on tiles in isometric view.
 
-******
+****** 
 
 Current features:
 - pure HTML, CSS and JavaScript
@@ -50,6 +50,7 @@ HTML UI
 - game UI
 	- player character stats
 	- active pause
+- map showing visited region with highligh in currently visible region
 
 controls
 - mouse control

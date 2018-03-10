@@ -43,16 +43,14 @@ function selectTilesSwitcher(){
 function fillSelectedTile(ctx){
   var r = Math.floor((yMouse + Math.abs(map.offsetTopLeft.y)) / map.tileHeightHalf);
   var c = Math.floor((xMouse + Math.abs(map.offsetTopLeft.x)) / map.tileWidth);
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.translate(map.offsetTopLeft.x, map.offsetTopLeft.y);
+
+  // ctx.setTransform(1, 0, 0, 1, 0, 0);
+  // ctx.translate(map.offsetTopLeft.x, map.offsetTopLeft.y);
 
   map.fillOneTileBase( ctx, "rgba(0, 0, 255, 0.4)", r, c );
-  
+
   customMessage(ctx, "r: " + r + ", c: " + c, xMouse, yMouse, 20,  -20, 24, true);
 }
-
-
-
 
 
 var devToolsSwitch = false;
@@ -62,11 +60,11 @@ function devToolsSwitcher(){
 }
 
 function devTools(ctx){
-  playerBase(ctx, "red");
-  map.strokeAllTilesBase(ctx, "rgba(0, 0, 255, 0.2)"); 
+  // playerBase(ctx, "red");
+  // map.strokeAllTilesBase(ctx, "rgba(0, 0, 255, 0.2)"); 
   player.collisionModel.drawArea(map, player, ctx)
   player.pinPoint(ctx, map, "#0000ff");
-  drawCanvasCenter("#ff0000", ctx);
+  // drawCanvasCenter("#ff0000", ctx);
 
 
   // customMessage(ctx, "x: " + player.x, player.x, player.y, 40, 10, 20);

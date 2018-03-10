@@ -1,11 +1,11 @@
 // Create the canvas
 // ===========================================================
 let layer1 = document.createElement("canvas"),
-    layer2 = document.createElement("canvas"),
-    layer3 = document.createElement("canvas"),
+    // layer2 = document.createElement("canvas"),
+    // layer3 = document.createElement("canvas"),
     ctx1 = layer1.getContext("2d"),
-    ctx2 = layer2.getContext("2d"),
-    ctx3 = layer3.getContext("2d"),
+    // ctx2 = layer2.getContext("2d"),
+    // ctx3 = layer3.getContext("2d"),
     canvasWidth, canvasHeight, canvasWidthHalf, canvasHeightHalf, xMouse, yMouse;
 
     // below is used when dynamicly creting css styles:
@@ -22,8 +22,8 @@ let layer1 = document.createElement("canvas"),
     head.appendChild(dynamicStyle);
 
 layer1.className = "layer1";
-layer2.className = "layer2";
-layer3.className = "layer3";
+// layer2.className = "layer2";
+// layer3.className = "layer3";
 
 function setCanvas() {
   canvasWidth = (window.innerWidth && document.documentElement.clientWidth ? 
@@ -43,11 +43,11 @@ function setCanvas() {
   layer1.width = canvasWidth;
   layer1.height = canvasHeight;
 
-  layer2.width = canvasWidth;
-  layer2.height = canvasHeight;
+  // layer2.width = canvasWidth;
+  // layer2.height = canvasHeight;
 
-  layer3.width = canvasWidth;
-  layer3.height = canvasHeight;
+  // layer3.width = canvasWidth;
+  // layer3.height = canvasHeight;
   
   let vignette = document.querySelector("#vignette");
   vignette.width = canvasWidth;
@@ -56,8 +56,8 @@ function setCanvas() {
 setCanvas();
 
 document.body.appendChild(layer1);
-document.body.appendChild(layer2);
-document.body.appendChild(layer3);
+// document.body.appendChild(layer2);
+// document.body.appendChild(layer3);
 
 // //canvas.style.background = "#000";
 
@@ -100,8 +100,8 @@ let map = new generateMap(
   74,       // tile twidth
   40,       // tile heigh
   0,        // number of holes
-  0, //1200,        // number of bumbs
-  0, //10,          // number of high bumbs
+  1200,        // number of bumbs
+  10,          // number of high bumbs
   "center",  // map starting x position
   "center",   // map starting y position
   0           // number of tiles on the outside of map to clip out of camera (canvas) movment area
@@ -164,11 +164,11 @@ let animate = function () {
   ctx1.setTransform(1, 0, 0, 1, 0, 0);
   ctx1.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  ctx2.setTransform(1, 0, 0, 1, 0, 0);
-  ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
+  // ctx2.setTransform(1, 0, 0, 1, 0, 0);
+  // ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  ctx3.setTransform(1, 0, 0, 1, 0, 0);
-  ctx3.clearRect(0, 0, canvasWidth, canvasHeight);  
+  // ctx3.setTransform(1, 0, 0, 1, 0, 0);
+  // ctx3.clearRect(0, 0, canvasWidth, canvasHeight);  
   
   map.render(player);
 
@@ -176,11 +176,11 @@ let animate = function () {
   player.move(map, player);
   map.cameraUpdate(map, player.x, player.y);
   
-  player.animate(ctx2);
+  // player.animate(ctx2);
 
   
-  if(devToolsSwitch){devTools(ctx3);}
-  if(selectTilesSwitch){fillSelectedTile(ctx3)}
+  if(devToolsSwitch){devTools(ctx1);}
+  if(selectTilesSwitch){fillSelectedTile(ctx1)}
 
 
   
