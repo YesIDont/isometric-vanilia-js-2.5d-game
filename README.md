@@ -9,13 +9,9 @@ Current features:
 - map generator: random grass tiles, random tile level
 - character movment with arrow keys: updates rendering tile offset
 - character collision:
-	stage 1
-		at the loading of the map tile offset for sat collision is calculated
-  		which narrows down the amount of tiles to check
-  	stage 2
-  		above collection of tiles is tested to see if they are on different level than player is
-  	stage 3
-  		tiles on different level than player's character are put to SAT collision test 
+	- stage 1: at the loading of the map tile offset for sat collision is calculated which narrows down the amount of tiles to check
+  	- stage 2: above collection of tiles is tested to see if they are on different level than player is
+  	- stage 3: tiles on different level than player's character are put to SAT collision test 
 - character generator function: generates character with all his stats (currently only speed and sprite)
 - character's sprite animation function:
 	- allows to chose continous loop animation or breathing animation
@@ -37,6 +33,7 @@ http://monsterdesign.pl/soletaken/
 To do:
 - HTML UI
 	- dev tools
+	- fog of war!
 	- game UI
 		- player character stats
 		- active pause
@@ -87,4 +84,9 @@ To do:
 	- trumps, flaws
 	- looks
 	- proffesion: soldier, mercenary, mage, druid, etc
+	- 
+
+- weather
+	- rain
+	- fog
 	- 
