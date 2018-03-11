@@ -1,30 +1,42 @@
 // render function displays tiles images and updates their position with player velocity
 generateMap.prototype.render = function(playerObject){
-  let that = this;
-  let p = playerObject;
+  let m = this, // map
+      p = playerObject,
+      o = m.offsetTopLeft.y > 0 ? 0 : -m.offsetTopLeft.y,
+      img;
   // let ctx = ctx1;
   
   ctx1.setTransform(1, 0, 0, 1, 0, 0);
-  ctx1.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
   // ctx2.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx2.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  // ctx2.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
   // ctx3.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx3.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  // ctx3.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
-  // render tiles under player's sprite
-  for( r = that.tilesOutsideCanvas.top - 3; r < that.tiles.length - that.tilesOutsideCanvas.bottom + 3; r++ ) {
-    if( r >= 0 && r < that.tiles.length ) {
+  
+  // Calculates offset for rendering, this allows to render only tiles visible in canvas and few outside of it.
+  // This if checks if the canvas can ignore map.zMin and/or man.zMax to avoid rendering unwanted tiles.
 
-      if( that.tiles[r][0].y <= p.y || (p.y >= that.tiles[r][0].y && p.y <= that.tiles[r][0].y + that.tileHeightHalf ) ) {
+  let top = m.tilesOutsideCanvas.top - Math.floor( Math.abs( m.zMin ) / m.tileHeightHalf ) - 3,
+      bottom = m.yTilesNumber - m.tilesOutsideCanvas.bottom + Math.floor( Math.abs( m.zMax ) / m.tileHeightHalf ) + 3,
+      left = m.tilesOutsideCanvas.left - 3,
+      right = m.xTilesNumber - m.tilesOutsideCanvas.right + 3;
 
-        for( c = that.tilesOutsideCanvas.left - 3; c < that.tiles[r].length - that.tilesOutsideCanvas.right + 3; c++ ) {
-          if( c >= 0 && c < that.tiles[r].length ) {
+  // render tiles under player's sprite    
+  for( r = top; r < bottom + 3; r++ ) {
+    if( r >= 0 && r < m.tiles.length ) {
 
-            let img;
+      if( m.tiles[r][0].y <= p.y || ( p.y >= m.tiles[r][0].y && p.y <= m.tiles[r][0].y + m.tileHeightHalf ) ) {
+
+
+        for( c = left - 3; c < right + 3; c++ ) {
+          if( c >= 0 && c < m.tiles[r].length /*&&
+              m.tiles[r][c].y + m.tiles[r][c].z > o - m.tileHeight &&
+              m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + m.tileHeight*/ ) {           
             
-            switch(that.tiles[r][c].type) {
+            switch( m.tiles[r][c].type ) {
               case 1:
                 img = grass;
                 break;
@@ -38,13 +50,11 @@ generateMap.prototype.render = function(playerObject){
                 img = water;
                 break;
             }
-
             ctx1.drawImage (
               img,
-              that.tiles[r][c].xAbsolute,
-              that.tiles[r][c].yAbsolute + that.tiles[r][c].z
+              m.tiles[r][c].xAbsolute,
+              m.tiles[r][c].yAbsolute + m.tiles[r][c].z
             )
-              
           }          
         }
       }
@@ -54,15 +64,19 @@ generateMap.prototype.render = function(playerObject){
   player.animate(ctx1);
 
   // render tiles above player's sprite
-  for(r = that.tilesOutsideCanvas.top - 3; r < that.tiles.length - that.tilesOutsideCanvas.bottom + 3; r++) {
-    if(r >= 0 && r < that.tiles.length) {
-      for( c = that.tilesOutsideCanvas.left - 3; c < that.tiles[r].length - that.tilesOutsideCanvas.right + 3; c++ ) {
-        if( c >= 0 && c < that.tiles[r].length ) {
-          if( that.tiles[r][c].z < p.z && r === Math.floor( p.y / that.tileHeightHalf ) || r > Math.floor( p.y / that.tileHeightHalf ) ) {
+  for( r = top; r < bottom + 3; r++ ) {
+    if( r >= 0 && r < m.tiles.length ) {
 
+     for( c = left - 3; c < right + 3; c++ ) {
+        if( c >= 0 && c < m.tiles[r].length /*&&
+            m.tiles[r][c].y + m.tiles[r][c].z > o - 3 &&
+            m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + 3*/ ) { 
+
+          if( m.tiles[r][c].z < p.z && r === Math.floor( p.y / m.tileHeightHalf ) || r > Math.floor( p.y / m.tileHeightHalf ) ) {
+  
             let img;
 
-            switch(that.tiles[r][c].type) {
+            switch(m.tiles[r][c].type) {
               case 1:
                 img = grass;
                 break;
@@ -79,8 +93,8 @@ generateMap.prototype.render = function(playerObject){
 
             ctx1.drawImage (
               img,
-              that.tiles[r][c].xAbsolute,
-              that.tiles[r][c].yAbsolute + that.tiles[r][c].z
+              m.tiles[r][c].xAbsolute,
+              m.tiles[r][c].yAbsolute + m.tiles[r][c].z
             )
           }          
         }          
@@ -92,18 +106,18 @@ generateMap.prototype.render = function(playerObject){
 
   // 3 canvas layer approach
 //   // redner only tiles visible on canvas
-//   for(r = that.tilesOutsideCanvas.top - 3; r < that.tiles.length - that.tilesOutsideCanvas.bottom + 3; r++) {
-//     if(r >= 0 && r < that.tiles.length) {
+//   for(r = m.tilesOutsideCanvas.top - 3; r < m.tiles.length - m.tilesOutsideCanvas.bottom + 3; r++) {
+//     if(r >= 0 && r < m.tiles.length) {
 
       
-//       if(that.tiles[r][0].y < p.y || (p.y > that.tiles[r][0].y && p.y < that.tiles[r][0].y + that.tileHeightHalf)){
+//       if(m.tiles[r][0].y < p.y || (p.y > m.tiles[r][0].y && p.y < m.tiles[r][0].y + m.tileHeightHalf)){
 //         ctx = ctx1;
 //       }
 
-//       for(c = that.tilesOutsideCanvas.left - 3; c < that.tiles[r].length - that.tilesOutsideCanvas.right + 3; c++) {
-//         if(c >= 0 && c < that.tiles[r].length) {
+//       for(c = m.tilesOutsideCanvas.left - 3; c < m.tiles[r].length - m.tilesOutsideCanvas.right + 3; c++) {
+//         if(c >= 0 && c < m.tiles[r].length) {
 //           let img;
-//           switch(that.tiles[r][c].type) {
+//           switch(m.tiles[r][c].type) {
 //             case 1:
 //               img = grass;
 //               break;
@@ -117,17 +131,17 @@ generateMap.prototype.render = function(playerObject){
 //               img = water;
 //               break;
 //           }
-//           if( Math.abs( that.tiles[r][c].z) > p.z && r === Math.floor( p.y / that.tileHeightHalf ) || r > Math.floor( p.y / that.tileHeightHalf ) ) {
+//           if( Math.abs( m.tiles[r][c].z) > p.z && r === Math.floor( p.y / m.tileHeightHalf ) || r > Math.floor( p.y / m.tileHeightHalf ) ) {
 //             ctx = ctx3;
 
-//           } else if(that.tiles[r][c].z === p.z) {
+//           } else if(m.tiles[r][c].z === p.z) {
 //             ctx = ctx1;
 //           }
 
 //           ctx.drawImage(
 //             img,
-//             that.tiles[r][c].xAbsolute,
-//             that.tiles[r][c].yAbsolute + that.tiles[r][c].z
+//             m.tiles[r][c].xAbsolute,
+//             m.tiles[r][c].yAbsolute + m.tiles[r][c].z
 //           )
 //         }          
 //       }      
@@ -137,13 +151,13 @@ generateMap.prototype.render = function(playerObject){
 };
 
 generateMap.prototype.renderOneTile = function(r, c, ctx){
-  let that = this;
+  let m = this;
   
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
+  ctx.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
   let img;
-  switch(that.tiles[r][c].type) {
+  switch(m.tiles[r][c].type) {
     case 1:
       img = grass;
       break;
@@ -159,7 +173,7 @@ generateMap.prototype.renderOneTile = function(r, c, ctx){
   };
   ctx.drawImage(
     img,
-    that.tiles[r][c].xAbsolute,
-    that.tiles[r][c].yAbsolute + that.tiles[r][c].elevation
+    m.tiles[r][c].xAbsolute,
+    m.tiles[r][c].yAbsolute + m.tiles[r][c].elevation
   );
 };

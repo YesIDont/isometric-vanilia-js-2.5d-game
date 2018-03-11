@@ -59,9 +59,10 @@ function createCharacter(playerSpeedInPx){
 
 // Methods
 
-createCharacter.prototype.startPosition = function(xS, yS) {
+createCharacter.prototype.startPosition = function(xS, yS, zS) {
   this.x = xS;
   this.y = yS;
+  this.z = zS;
 };
 
 createCharacter.prototype.animate = function(ctx) {

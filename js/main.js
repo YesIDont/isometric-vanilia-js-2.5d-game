@@ -138,6 +138,18 @@ function releaseKey(e) {
 document.addEventListener("keydown", pressKey, false);
 document.addEventListener("keyup", releaseKey, false);
 
+
+// Mouse controls
+// ===========================================================
+
+// Mouse collision point
+let mousePoly = new P(new V(-1, -1), [
+  new V(1, 1),
+  new V(4, 1),
+  new V(4, 4),
+  new V(1, 4)
+]);
+
 // Tracking mouse position
 document.onmousemove = function (e) {  
   e = e || window.event;
@@ -148,9 +160,11 @@ document.onmousemove = function (e) {
   if (xMouse === undefined) {
     xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
     yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-  }    
+  }
+  
+  mousePoly.pos.x = xMouse + Math.abs( map.offsetTopLeft.x );
+  mousePoly.pos.y = yMouse + Math.abs( map.offsetTopLeft.y );
 }
-
 
 
 // The main game loop
@@ -171,11 +185,12 @@ let animate = function () {
 
   player.collisionModel.testPosition(map, player);  
   player.move(map, player);
-  map.cameraUpdate(map, player.x, player.y);
+  map.cameraUpdate(map, player.x, player.y, player.z);
     
   
   if(devToolsSwitch){devTools(ctx1);}
-  if(selectTilesSwitch){fillSelectedTile(ctx1)} 
+
+  if(selectTilesSwitch){fillSelectedTile(ctx1, map)}
 
   // Request to do this again ASAP 
   requestAnimationFrame(animate);

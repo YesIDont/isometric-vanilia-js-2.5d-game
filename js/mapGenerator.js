@@ -41,6 +41,8 @@ function generateMap(
   this.mapHeight = yTilesNumber * Math.floor(this.tileHeight * 0.5) + that.tileHeightHalf;
   this.mapWidthHalf = Math.floor(this.mapWidth * 0.5);
   this.mapHeightHalf = Math.floor(this.mapHeight * 0.5);
+  this.zMax = 0;
+  this.zMin = 0;
   this.startPosition_x = mapStartPosition_x;
   this.startPosition_y = mapStartPosition_y;
   this.clipByTiles = clipByTiles || 0; // it tels animating function how many tiles must be clipped out of movment area
@@ -58,7 +60,7 @@ function generateMap(
       Third set gives top, right, bottom and left offset in number of tiles outside canvas.
   */
 
-  // offset determines map starting position, default position is left top
+  // offset determines camera position, default position is left top
   this.offsetTopLeft = {
     x: 0,
     y: 0
@@ -101,7 +103,7 @@ function generateMap(
     let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-  this.randomizeTerrain();
+  // this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
   // this.makeHoles();
@@ -115,16 +117,20 @@ function generateMap(
   // this.moveOneTile(37, 20, 20);
   // this.moveOneTile(37, 17, -10);
   // this.moveOneTile(35, 19, -20);
+
+  this.findMaxAndMinZ();
 };
 
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
+
+// this makes sure natural ground is never even
 generateMap.prototype.randomizeTerrain = function() {
   let that = this;
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
-      let rndLevel = Math.floor( (Math.random() * 4) );
+      let rndLevel = Math.floor( (Math.random() * 3) );
       let rndSign = Math.random() < 0.5 ? -1 : 1;
       that.tiles[r][c].z = rndSign > 0 ? rndLevel : -rndLevel;
     }
@@ -134,7 +140,7 @@ generateMap.prototype.fallFromLeft = function() {
   let that = this;
   let z = 0;
   for(r = 0; r < that.tiles.length; r++) {
-    for(c = that.tiles[r].length / 4; c < that.tiles[r].length; c++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
       that.tiles[r][c].z += z;
       z += 5;
     }
@@ -256,9 +262,10 @@ generateMap.prototype.updateTilesOutside = function() {
   that.tilesOutsideCanvas.left = Math.floor(Math.abs(that.offsetTopLeft.x) / that.tileWidth);
 };
 
-// start position calculates offset for starting map position and appends it to all tiles position
+// start position calculates offset for starting camera position and appends it to all tiles position
 generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosition_y, playerObject) {
   let that = this;
+  let p = playerObject;
 
   // default: left, top
   if(startPosition_x === "left" &&
@@ -270,7 +277,10 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
 
   //  center, center
   if(startPosition_x === "center" && startPosition_y === "center"){
-      playerObject.startPosition(that.mapWidthHalf, that.mapHeightHalf);
+    let tileInCenter = that.tiles[ Math.floor( that.yTilesNumber * 0.5 ) ][ Math.floor( that.xTilesNumber * 0.5 ) ];
+
+    p.startPosition(that.mapWidthHalf, that.mapHeightHalf, tileInCenter.z - 50);
+
   };
   
 
@@ -283,29 +293,52 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
   
 };
 
-generateMap.prototype.cameraUpdate = function (mapObject, x, y){
+generateMap.prototype.findMaxAndMinZ = function () {
+  let that = this;
+  let max = 0;
+  let min = 0;
+
+  for (r = 0; r < that.yTilesNumber; r++) {
+    for(c = 0; c < that.xTilesNumber; c++) {
+      max = that.tiles[r][c].z < max ? that.tiles[r][c].z : max;
+      min = that.tiles[r][c].z > min ? that.tiles[r][c].z : min;
+    }
+  }
+  that.zMax = max;
+  that.zMin = min;
+};
+
+generateMap.prototype.cameraUpdate = function ( mapObject, x, y, z ) {
   let m = mapObject;
 
-  // this function allows camera (canvas) to follow point with x and y coordinates, for example - the player character 
+  // this function allows camera (canvas) to follow x, y, z coordinates, for example - the player character 
 
   // update top left x offset
-  if(-(x - canvasWidthHalf) < -(m.clipByTiles * m.tileWidth) && -(x - canvasWidthHalf) > -(m.mapWidth - canvasWidth) + (m.clipByTiles * m.tileWidth)) {
+  if( -(x - canvasWidthHalf) < -(m.clipByTiles * m.tileWidth) &&
+      -(x - canvasWidthHalf) > -(m.mapWidth - canvasWidth) + (m.clipByTiles * m.tileWidth)) {
+
     m.offsetTopLeft.x =  -(x - canvasWidthHalf);
   }
-  
+
   // update top left y offset 
-  if(-(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) && -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) +(m.clipByTiles * m.tileWidth)) {
-    m.offsetTopLeft.y = -(y - canvasHeightHalf);
+  if( -(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) - m.zMax &&
+      -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) + (m.clipByTiles * m.tileWidth) - m.zMin  ) {
+
+      m.offsetTopLeft.y = -(y - canvasHeightHalf);
   }    
 
   // update bottom right x offset
-  if(m.mapWidth - x - canvasWidthHalf > m.clipByTiles * m.tileWidth && m.mapWidth - x - canvasWidthHalf < m.mapWidth - canvasWidth - (m.clipByTiles * m.tileWidth)) {
-    m.offsetBottomRight.x = m.mapWidth - x - canvasWidthHalf;
+  if( m.mapWidth - x - canvasWidthHalf > m.clipByTiles * m.tileWidth &&
+      m.mapWidth - x - canvasWidthHalf < m.mapWidth - canvasWidth - (m.clipByTiles * m.tileWidth)) {
+
+      m.offsetBottomRight.x = m.mapWidth - x - canvasWidthHalf;
   }  
 
   // update bottom right y offset
-  if(m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth && m.mapHeight - y - canvasHeightHalf < m.mapHeight - canvasHeight - (m.clipByTiles * m.tileWidth)) {
-    m.offsetBottomRight.y = m.mapHeight - y - canvasHeightHalf;
+  if( m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth + m.zMax  &&
+      m.mapHeight - y - canvasHeightHalf < m.mapHeight - canvasHeight - (m.clipByTiles * m.tileWidth) + m.zMin ) {
+
+      m.offsetBottomRight.y = m.mapHeight - y - canvasHeightHalf;
   }
 
   m.updateTilesOutside();
