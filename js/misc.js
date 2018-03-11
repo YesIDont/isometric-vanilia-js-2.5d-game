@@ -28,8 +28,7 @@ function drawCanvasCenter(color, ctx) {
 };
 
 function playerBase(ctx, color) {
-  ctx.fillStyle = color;
-  player.collisionModel.base.poly.fill(ctx);
+  player.collisionModel.base.poly.fill(ctx, color);
 };
 
 
@@ -44,31 +43,31 @@ function fillSelectedTile(ctx){
   var r = Math.floor((yMouse + Math.abs(map.offsetTopLeft.y)) / map.tileHeightHalf);
   var c = Math.floor((xMouse + Math.abs(map.offsetTopLeft.x)) / map.tileWidth);
 
-  // ctx.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx.translate(map.offsetTopLeft.x, map.offsetTopLeft.y);
-
-  map.fillOneTileBase( ctx, "rgba(0, 0, 255, 0.4)", r, c );
-
-  customMessage(ctx, "r: " + r + ", c: " + c, xMouse, yMouse, 20,  -20, 24, true);
+  map.fillOneTileBase( ctx, "rgba(0, 110, 255, 0.3)", r, c );
+  map.tiles[r][c].base.stroke( ctx, "rgb(0, 0, 255)" );
 }
 
 
-var devToolsSwitch = false;
+var devToolsSwitch = true;
 
 function devToolsSwitcher(){
   devToolsSwitch = devToolsSwitch === true ? false : true;
 }
 
 function devTools(ctx){
-  // playerBase(ctx, "red");
+  
   // map.strokeAllTilesBase(ctx, "rgba(0, 0, 255, 0.2)"); 
-  player.collisionModel.drawArea(map, player, ctx)
-  player.pinPoint(ctx, map, "#0000ff");
+  // player.collisionModel.drawArea(map, player, ctx)
+  // player.pinPoint(ctx, map, "#0000ff");
   // drawCanvasCenter("#ff0000", ctx);
+  // playerBase(ctx, "rgba(255, 0, 0, 0.4)");
+  // player.collisionModel.base.point.fill(ctx, "rgb(255, 0, 0)");
+  // map.fillOneTileBase(ctx, "rgba(255, 0, 0, 0.3)", player.standsOnTile[0], player.standsOnTile[1]);
 
 
-  // customMessage(ctx, "x: " + player.x, player.x, player.y, 40, 10, 20);
-  // customMessage(ctx, "y: " + player.y, player.x, player.y, 40, 30, 20);
+  customMessage(ctx, "x: " + player.x, player.x, player.y, 40, -100, 20);
+  customMessage(ctx, "y: " + player.y, player.x, player.y, 40, -75, 20);
+  customMessage(ctx, "z: " + player.z, player.x, player.y, 40, -50, 20);
 
   // ctx.setTransform(1, 0, 0, 1, 0, 0);
   // customMessage(ctx, "Left top offset x: " + map.offsetTopLeft.x + " px", 10, 20, 0, 0, 20, false);

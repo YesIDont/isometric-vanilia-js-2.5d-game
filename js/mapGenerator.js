@@ -14,10 +14,7 @@ function generateMap(
     xTilesNumber, 
     yTilesNumber, 
     tileWidth, 
-    tileHeight, 
-    howManyHoles, 
-    howManyBumbs, 
-    howManyHills,
+    tileHeight,
     /*  
         Starting position is used to calculate map offset in relation to canvas.
         Can be intergers in range of map width and height, and if typed outside thiese ranges -
@@ -50,10 +47,6 @@ function generateMap(
   // this.xStartOffset = Math.floor((this.mapWidth * 0.5)) - canvasWidthHalf; // on start centers map horizontaly
   // this.yStartOffset = Math.floor((this.mapHeight * 0.5)) - canvasHeightHalf; // on start centers map verticaly
    
-
-  this.howManyHoles = howManyHoles;
-  this.howManyBumbs = howManyBumbs;
-  this.howManyHills = howManyHills;
   /*
       Below offset of coordinates and numbers of tiles in each direction
       is used to narrow loop across array of all tiles when drawing them on screen.
@@ -108,30 +101,61 @@ function generateMap(
     let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-  // this.terrainShape();
-  this.makeHoles();
-  this.makeBumps();
-  this.makeHighBump();
+  this.randomizeTerrain();
+  // this.fallFromLeft();
+  // this.fallFromTop();
+  // this.makeHoles();
+  // this.makeBumps();
+  // this.makeHighBump();
   // this.makeWall();
+
+  // test falling
+  // this.moveOneTile(41, 21, 40);
+  // this.moveOneTile(39, 18, 10);
+  // this.moveOneTile(37, 20, 20);
+  // this.moveOneTile(37, 17, -10);
+  // this.moveOneTile(35, 19, -20);
 };
 
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
-generateMap.prototype.terrainShape = function() {
+generateMap.prototype.randomizeTerrain = function() {
   let that = this;
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
-      let rndLevel = Math.floor( (Math.random() * 10) );
+      let rndLevel = Math.floor( (Math.random() * 4) );
       let rndSign = Math.random() < 0.5 ? -1 : 1;
       that.tiles[r][c].z = rndSign > 0 ? rndLevel : -rndLevel;
     }
   }
 };
+generateMap.prototype.fallFromLeft = function() {
+  let that = this;
+  let z = 0;
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = that.tiles[r].length / 4; c < that.tiles[r].length; c++) {
+      that.tiles[r][c].z += z;
+      z += 5;
+    }
+    z = 0;
+  }
+};
+generateMap.prototype.fallFromTop = function() {
+  let that = this;
+  let z = 0;
+  let i = Math.floor( (Math.random() * 4) ) + 1;
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = ( that.tiles[r].length / i ) + 5; c < that.tiles[r].length; c++) {
+      that.tiles[r][c].z += z;      
+    }
+    z += 3;
+  }
+};
 generateMap.prototype.makeHoles = function(){
   let that = this;
   if(typeof this.randomTile !== undefined) {
-    for(i = 0; i < this.howManyHoles; i++) {
+    for(i = 0; i < 300; i++) {
       let rnd = that.randomTile();
       rnd.z += 20;
     }
@@ -140,20 +164,24 @@ generateMap.prototype.makeHoles = function(){
 generateMap.prototype.makeBumps = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < this.howManyBumbs; i++) {
+      for(i = 0; i < 1200; i++) {
         let rnd = that.randomTile();
         rnd.z -= 20;
       }      
   }   
 };
-generateMap.prototype.moveOneTile = function(r, c, z) {
+
+
+generateMap.prototype.moveOneTile = function(r, c, value) {
   let that = this;
-  that.tiles[r][c].z = z;
+  that.tiles[r][c].z += value;
 };
+
+
 generateMap.prototype.makeHighBump = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < this.howManyHills; i++) {
+      for(i = 0; i < 30; i++) {
         let rnd = that.randomTile();
         rnd.z -= 67;
       };

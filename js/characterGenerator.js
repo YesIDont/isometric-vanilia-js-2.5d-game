@@ -51,31 +51,10 @@ function createCharacter(playerSpeedInPx){
   this.speed = playerSpeedInPx;
   this.xV = 0; // horizontal velocity
   this.yV = 0;  // vertical velocity
-  
-  this.lastPosition = {
-    x: 0,
-    y: 0,
-    base: {
-      x: 0,
-      y: 0
-    },
-    area: {
-      topLeft: {
-        x: 0,
-        y: 0
-      },
-      bottomRight: {
-        x: 0,
-        y:0
-      },
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    }
-  };
+  this.zV = 0;  // velocity of player in the air, player can't move while in the air
   
   this.collisionDetected = false;
+  this.lastTileStoodOn = [0, 0]
 };
 
 // Methods
@@ -118,40 +97,38 @@ createCharacter.prototype.animate = function(ctx) {
   if(p.yV > 0 && p.xV > 0) {
     p.spriteSheet.direction = 7;
   }
+
+  // draw frame based on player's action
   if(p.xV !== 0 || p.yV !== 0) {
     run.updateFrame(run);
-    run.drawFrame(p, run, x, y, ctx);
+    run.drawFrame(p, run, x, y + z, ctx);
   } else {
     idle.updateFrame(idle);
-    idle.drawFrame(p, idle, x, y, ctx);
+    idle.drawFrame(p, idle, x, y + z, ctx);
   }    
 };
 
 createCharacter.prototype.pinPoint = function(ctx, mapObject, color) {
   let that = this;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
 
-    ctx.beginPath();
-    ctx.moveTo(that.x, 0);
-    ctx.lineTo(that.x, mapObject.mapHeight);
-    ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(that.x, 0);
+  ctx.lineTo(that.x, mapObject.mapHeight);
+  ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(0, that.y);
-    ctx.lineTo(mapObject.mapWidth, that.y);
-    ctx.stroke();
-
-  
+  ctx.beginPath();
+  ctx.moveTo(0, that.y);
+  ctx.lineTo(mapObject.mapWidth, that.y);
+  ctx.stroke();  
 };
 
 createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject) {
-  //characters base for interactions - for now - ractangle
+  //characters base for interactions
 
   this.m = mapObject;
   this.p = playerObject;
-
-  this.standsOnTile = undefined;
 
   this.base = {
     x: this.p.x -12,
@@ -165,6 +142,13 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
       new V(22, 1),
       new V(22, 11),
       new V(1, 11)
+    ]),
+
+    point: new P(new V(this.p.x - 1, this.p.y - 1), [
+      new V(1, 1),
+      new V(1, 1),
+      new V(1, 1),
+      new V(1, 1)
     ])
   };
   
@@ -200,42 +184,6 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
     bottom: Math.floor(((mapObject.mapHeight - playerObject.y) - this.areaDimensions.width) / mapObject.tileHeight), 
 
     left: Math.floor((playerObject.x - this.areaDimensions.width) / mapObject.tileWidth),
-  };
-
-  this.saveLastPosition = function(playerObject) {
-    playerObject.lastPosition.x = playerObject.x;
-    playerObject.lastPosition.y = playerObject.y;
-
-    playerObject.lastPosition.base.x = this.base.x;
-    playerObject.lastPosition.base.y = this.base.y;
-
-    playerObject.lastPosition.area.topLeft.x = this.area.points.topLeft.x;
-    playerObject.lastPosition.area.topLeft.y = this.area.points.topLeft.y;
-    playerObject.lastPosition.area.bottomRight.x = this.area.points.bottomRight.x;
-    playerObject.lastPosition.area.bottomRight.y = this.area.points.bottomRight.y;
-
-    playerObject.lastPosition.area.top = this.area.top;
-    playerObject.lastPosition.area.bottom = this.area.bottom;
-    playerObject.lastPosition.area.left = this.area.left;
-    playerObject.lastPosition.area.right = this.area.right;
-  };
-
-  this.restoreLastPosition = function(playerObject) {
-    playerObject.x = playerObject.lastPosition.x;
-    playerObject.y = playerObject.lastPosition.y;
-
-    this.base.x = playerObject.lastPosition.base.x;
-    this.base.y = playerObject.lastPosition.base.y;
-
-    this.area.points.topLeft.x = playerObject.lastPosition.area.topLeft.x;
-    this.area.points.topLeft.y = playerObject.lastPosition.area.topLeft.y;
-    this.area.points.bottomRight.x = playerObject.lastPosition.area.bottomRight.x;
-    this.area.points.bottomRight.y = playerObject.lastPosition.area.bottomRight.y;
-
-    this.area.top = playerObject.lastPosition.area.top;
-    this.area.bottom = playerObject.lastPosition.area.bottom;
-    this.area.left = playerObject.lastPosition.area.left;
-    this.area.right = playerObject.lastPosition.area.right;
   };
 
   this.response = "";
@@ -295,12 +243,14 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
               m.tiles[r][c].y > cm.area.points.topLeft.y &&
               m.tiles[r][c].y + m.tileHeight < cm.area.points.bottomRight.y) {
 
-                m.fillOneTileBase(ctx, "rgba(89, 178, 234, 0.3)", r, c);
+                // // fill collision area
+                // m.fillOneTileBase(ctx, "rgba(89, 178, 234, 0.3)", r, c);
 
-                if( m.tiles[r][c].z !== p.z ) {
+                // fill base of tiles that could be / are colliding with player
+                if( m.tiles[r][c].z > p.z + 10 || m.tiles[r][c].z < p.z - 10 ) {
                   m.fillOneTileBase(ctx, "rgba(255, 0, 0, 0.4)", r, c);
                 }
-                let player = cm.base.poly;
+                let player = cm.base.point;
                 let tile = m.tiles[r][c].base;
 
                 let response = new SAT.Response();
@@ -309,7 +259,7 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                 // test collision
                 p.collisionDetected = player.collidesWith(tile, response);
 
-                // write if player is standing on this tile
+                // fill tile that player is currently standing on
                 if(p.collisionDetected) {
                   m.fillOneTileBase(ctx, "rgba(0, 255, 0, 0.3)", r, c);
                 }
@@ -345,8 +295,9 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
               m.tiles[r][c].y > cm.area.points.topLeft.y &&
               m.tiles[r][c].y + m.tileHeight < cm.area.points.bottomRight.y) {
 
-                // continue to SAT test if given tile is on different map level +/- 5 than player
-                if( m.tiles[r][c].z !== p.z ) {
+                // continue to SAT collision test if given tile is on different map level +/- 10 than player
+                // and tile is higher than player
+                if( m.tiles[r][c].z < p.z && ( m.tiles[r][c].z > p.z + 10 || m.tiles[r][c].z < p.z - 10 ) ) {
 
                   // set variables for collision test
                   let player = cm.base.poly;
@@ -359,7 +310,7 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                   p.collisionDetected = player.collidesWith(tile, response);
 
                   // counter movment if collision detected
-                  if(p.collisionDetected) {
+                  if( p.collisionDetected  ) {
                     let model = p.collisionModel;
                     let rex = Math.round(response.overlapV.x);
                     let rey = Math.round(response.overlapV.y);
@@ -372,6 +323,10 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                     model.base.poly.pos.x -= rex;
                     model.base.poly.pos.y -= rey;
 
+                    // player's collision point position
+                    model.base.point.pos.x -= rex;
+                    model.base.point.pos.y -= rey;
+
                     // player's collision area position
                     model.area.points.topLeft.x -= rex;
                     model.area.points.topLeft.y -= rey;
@@ -379,10 +334,12 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                     model.area.points.bottomRight.y -= rey;
                   }
 
-                // if this tile is on the same level
+                // if tile is on the same level as player
+                // or tile is lower
                 } else {
                   // set variables for collision test
-                  let player = cm.base.poly;
+                  // testing one pxel of player's x and y position
+                  let player = cm.base.point; 
                   let tile = m.tiles[r][c].base;
 
                   let response = new SAT.Response();
@@ -391,10 +348,22 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                   // test collision
                   p.collisionDetected = player.collidesWith(tile, response);
 
-                  // write if player is standing on this tile
-                  if(p.collisionDetected) {
+                  // if collision was detected
+                  if( p.collisionDetected ) {                    
+                    
+                    if( m.tiles[r][c].z !== p.z && ( 37 in keysDown || 38 in keysDown || 39 in keysDown || 40 in keysDown ) ) {
+
+                      if( Math.abs( p.z - m.tiles[r][c].z ) >= 10 ) {
+                        p.zV = 5;
+
+                      } else {
+                        p.z = m.tiles[r][c].z;
+                      }          
+
+                    }
                     m.tiles[r][c].playerStandsOnIt = true;
-                    p.standsOnTile = [r, c];
+                    p.lastTileStoodOn = [r, c];
+                    
                   } else {
                     m.tiles[r][c].playerStandsOnIt = false;
                   }
@@ -434,54 +403,62 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
 
 createCharacter.prototype.move = function(mapObject, playerObject) {
   let p = playerObject;
-  let m = mapObject;  
+  let m = mapObject;
+  let l = m.tiles[ p.lastTileStoodOn[0] ][ p.lastTileStoodOn[1] ];
   
   // reset velocity build up in the last frame
   p.xV = 0;
   p.yV = 0;
 
-  // Player holding left key
-  if (37 in keysDown){
-    // Move player if he's in the range of map
-    if(p.x > (m.clipByTiles * m.tileWidth) + p.xV + (p.spriteWidth / 2) && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth)) {     
+  p.z = p.z < l.z ? p.z + p.zV : p.z = l.z;
 
-      // Move player
-      p.xV -= p.speed;
-      p.x += p.xV;
+  if(p.z !== l.z) {
+    p.zV = Math.floor( p.zV *= 0.8 ) > 3 ? Math.floor( p.zV *= 0.8 ) : 3; // gravity
+  } else {  
 
-      // Move player's collision box
-      p.collisionModel.base.poly.pos.x += p.xV;
-
-      //Move player's collision area
-      p.collisionModel.area.points.topLeft.x += p.xV;
-      p.collisionModel.area.left = Math.floor(p.collisionModel.area.points.topLeft.x / m.tileWidth);
-      p.collisionModel.area.points.bottomRight.x += p.xV;
-      p.collisionModel.area.right = Math.floor((m.mapWidth - p.collisionModel.area.points.bottomRight.x) / m.tileWidth);
-    };
-  };
-  
-  // Player holding key right
-  if (39 in keysDown) {
+    // Player holding left key
+    if (37 in keysDown){
       // Move player if he's in the range of map
-      if(p.x > (m.clipByTiles * m.tileWidth) +  p.xV && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth) - (p.spriteWidth / 2)) {
-        
+      if(p.x > (m.clipByTiles * m.tileWidth) + p.xV + (p.spriteWidth / 2) && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth)) {     
+
         // Move player
-        p.xV += p.speed;
+        p.xV -= p.speed;
         p.x += p.xV;
 
         // Move player's collision box
         p.collisionModel.base.poly.pos.x += p.xV;
+        p.collisionModel.base.point.pos.x += p.xV;
 
         //Move player's collision area
         p.collisionModel.area.points.topLeft.x += p.xV;
         p.collisionModel.area.left = Math.floor(p.collisionModel.area.points.topLeft.x / m.tileWidth);
         p.collisionModel.area.points.bottomRight.x += p.xV;
-        p.collisionModel.area.right = Math.floor((m.mapWidth - p.collisionModel.area.points.bottomRight.x) / m.tileWidth);       
-      };     
-  };
-  
-  
-  // Player holding key up
+        p.collisionModel.area.right = Math.floor((m.mapWidth - p.collisionModel.area.points.bottomRight.x) / m.tileWidth);
+      };
+    };
+    
+    // Player holding key right
+    if (39 in keysDown) {
+        // Move player if he's in the range of map
+        if(p.x > (m.clipByTiles * m.tileWidth) +  p.xV && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth) - (p.spriteWidth / 2)) {
+          
+          // Move player
+          p.xV += p.speed;
+          p.x += p.xV;
+
+          // Move player's collision box
+          p.collisionModel.base.poly.pos.x += p.xV;
+          p.collisionModel.base.point.pos.x += p.xV;
+
+          //Move player's collision area
+          p.collisionModel.area.points.topLeft.x += p.xV;
+          p.collisionModel.area.left = Math.floor(p.collisionModel.area.points.topLeft.x / m.tileWidth);
+          p.collisionModel.area.points.bottomRight.x += p.xV;
+          p.collisionModel.area.right = Math.floor((m.mapWidth - p.collisionModel.area.points.bottomRight.x) / m.tileWidth);       
+        };     
+    };  
+    
+    // Player holding key up
     if (38 in keysDown) {
       // Move player if he's in the range of map
       if(p.y > (m.clipByTiles * m.tileHeight) + p.yV + p.spriteHeight + p.spriteHeight && p.y < m.mapHeight - (m.clipByTiles * m.tileWidth)) {
@@ -492,6 +469,7 @@ createCharacter.prototype.move = function(mapObject, playerObject) {
 
         // Move player's collision box
         p.collisionModel.base.poly.pos.y += p.yV;
+        p.collisionModel.base.point.pos.y += p.yV;
 
         //Move player's collision area
         p.collisionModel.area.points.topLeft.y += p.yV;
@@ -500,25 +478,27 @@ createCharacter.prototype.move = function(mapObject, playerObject) {
         p.collisionModel.area.bottom = Math.floor((m.mapHeight - p.collisionModel.area.points.bottomRight.y) / m.tileHeight);
       };
     };
-  
-  
-  // Player holding key down
-  if (40 in keysDown) {
-    // Move player if he's in the range of map
-    if(p.y > m.clipByTiles * m.tileHeight + p.yV && p.y < m.mapHeight - (m.clipByTiles * m.tileWidth) - 4) {
-      
-      // Move player
-      p.yV += p.speed;
-      p.y += p.speed;
+    
+    
+    // Player holding key down
+    if (40 in keysDown) {
+      // Move player if he's in the range of map
+      if(p.y > m.clipByTiles * m.tileHeight + p.yV && p.y < m.mapHeight - (m.clipByTiles * m.tileWidth) - 4) {
+        
+        // Move player
+        p.yV += p.speed;
+        p.y += p.speed;
 
-      // Move player's collision box
-      p.collisionModel.base.poly.pos.y += p.yV;
+        // Move player's collision box
+        p.collisionModel.base.poly.pos.y += p.yV;
+        p.collisionModel.base.point.pos.y += p.yV;
 
-      //Move player's collision area
-      p.collisionModel.area.points.topLeft.y += p.yV;
-      p.collisionModel.area.top = Math.floor(p.collisionModel.area.points.topLeft.y / m.tileHeight);
-      p.collisionModel.area.points.bottomRight.y += p.yV;
-      p.collisionModel.area.bottom = Math.floor((m.mapHeight - p.collisionModel.area.points.bottomRight.y) / m.tileHeight);
-    };
+        //Move player's collision area
+        p.collisionModel.area.points.topLeft.y += p.yV;
+        p.collisionModel.area.top = Math.floor(p.collisionModel.area.points.topLeft.y / m.tileHeight);
+        p.collisionModel.area.points.bottomRight.y += p.yV;
+        p.collisionModel.area.bottom = Math.floor((m.mapHeight - p.collisionModel.area.points.bottomRight.y) / m.tileHeight);
+      };
+    }
   }
 }

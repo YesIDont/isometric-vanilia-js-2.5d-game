@@ -23,8 +23,6 @@ generateMap.prototype.render = function(playerObject){
           if( c >= 0 && c < that.tiles[r].length ) {
 
             let img;
-
-            that.tiles[r][c].layer = 0; // udner the player
             
             switch(that.tiles[r][c].type) {
               case 1:
@@ -53,7 +51,6 @@ generateMap.prototype.render = function(playerObject){
     }
   }
 
-  if(selectTilesSwitch){fillSelectedTile(ctx1)}
   player.animate(ctx1);
 
   // render tiles above player's sprite
@@ -61,7 +58,7 @@ generateMap.prototype.render = function(playerObject){
     if(r >= 0 && r < that.tiles.length) {
       for( c = that.tilesOutsideCanvas.left - 3; c < that.tiles[r].length - that.tilesOutsideCanvas.right + 3; c++ ) {
         if( c >= 0 && c < that.tiles[r].length ) {
-          if( Math.abs( that.tiles[r][c].z) > p.z && r === Math.floor( p.y / that.tileHeightHalf ) || r > Math.floor( p.y / that.tileHeightHalf ) ) {
+          if( that.tiles[r][c].z < p.z && r === Math.floor( p.y / that.tileHeightHalf ) || r > Math.floor( p.y / that.tileHeightHalf ) ) {
 
             let img;
 
@@ -89,7 +86,8 @@ generateMap.prototype.render = function(playerObject){
         }          
       }
     }
-  }  
+  }
+
 
 
   // 3 canvas layer approach

@@ -99,9 +99,6 @@ let map = new generateMap(
   80,    // vertical number of tiles
   74,       // tile twidth
   40,       // tile heigh
-  0,        // number of holes
-  1200,        // number of bumbs
-  10,          // number of high bumbs
   "center",  // map starting x position
   "center",   // map starting y position
   0           // number of tiles on the outside of map to clip out of camera (canvas) movment area
@@ -175,15 +172,10 @@ let animate = function () {
   player.collisionModel.testPosition(map, player);  
   player.move(map, player);
   map.cameraUpdate(map, player.x, player.y);
-  
-  // player.animate(ctx2);
-
+    
   
   if(devToolsSwitch){devTools(ctx1);}
-  if(selectTilesSwitch){fillSelectedTile(ctx1)}
-
-
-  
+  if(selectTilesSwitch){fillSelectedTile(ctx1)} 
 
   // Request to do this again ASAP 
   requestAnimationFrame(animate);
