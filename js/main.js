@@ -145,9 +145,9 @@ document.addEventListener("keyup", releaseKey, false);
 // Mouse collision point
 let mousePoly = new P(new V(-1, -1), [
   new V(1, 1),
-  new V(4, 1),
-  new V(4, 4),
-  new V(1, 4)
+  new V(1, 1),
+  new V(1, 1),
+  new V(1, 1)
 ]);
 
 // Tracking mouse position
@@ -188,9 +188,11 @@ let animate = function () {
   map.cameraUpdate(map, player.x, player.y, player.z);
     
   
-  if(devToolsSwitch){devTools(ctx1);}
+  
 
   if(selectTilesSwitch){fillSelectedTile(ctx1, map)}
+
+    if(devToolsSwitch){devTools(ctx1);}
 
   // Request to do this again ASAP 
   requestAnimationFrame(animate);

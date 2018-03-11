@@ -75,7 +75,7 @@ function fillSelectedTile( ctx, mapObject ) {
 }
 
 
-let devToolsSwitch = true;
+let devToolsSwitch = false;
 
 function devToolsSwitcher(){
   devToolsSwitch = devToolsSwitch === true ? false : true;
