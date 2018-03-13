@@ -95,8 +95,8 @@ window.addEventListener("resize", setCanvas, false);
 // generate map
 // ===========================================================
 let map = new generateMap(
-  40,    // horizontal number of tiles
-  80,    // vertical number of tiles
+  256,    // horizontal number of tiles
+  256,    // vertical number of tiles
   74,       // tile twidth
   40,       // tile heigh
   "center",  // map starting x position

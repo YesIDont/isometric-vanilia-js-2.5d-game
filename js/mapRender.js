@@ -19,8 +19,8 @@ generateMap.prototype.render = function(playerObject){
   // Calculates offset for rendering, this allows to render only tiles visible in canvas and few outside of it.
   // This if checks if the canvas can ignore map.zMin and/or man.zMax to avoid rendering unwanted tiles.
 
-  let top = m.tilesOutsideCanvas.top - Math.floor( Math.abs( m.zMin ) / m.tileHeightHalf ) - 3,
-      bottom = m.yTilesNumber - m.tilesOutsideCanvas.bottom + Math.floor( Math.abs( m.zMax ) / m.tileHeightHalf ) + 3,
+  let top = m.tilesOutsideCanvas.top /*- Math.floor( Math.abs( m.zMin ) / m.tileHeightHalf )*/ - 3,
+      bottom = m.yTilesNumber /*- m.tilesOutsideCanvas.bottom + Math.floor( Math.abs( m.zMax ) / m.tileHeightHalf )*/ + 3,
       left = m.tilesOutsideCanvas.left - 3,
       right = m.xTilesNumber - m.tilesOutsideCanvas.right + 3;
 
@@ -35,23 +35,9 @@ generateMap.prototype.render = function(playerObject){
           if( c >= 0 && c < m.tiles[r].length /*&&
               m.tiles[r][c].y + m.tiles[r][c].z > o - m.tileHeight &&
               m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + m.tileHeight*/ ) {           
-            
-            switch( m.tiles[r][c].type ) {
-              case 1:
-                img = grass;
-                break;
-              case 2:
-                img = dirt;
-                break;
-              case 3:
-                img = mud;
-                break;
-              case 4:
-                img = water;
-                break;
-            }
+
             ctx1.drawImage (
-              img,
+              m.tiles[r][c].type,
               m.tiles[r][c].xAbsolute,
               m.tiles[r][c].yAbsolute + m.tiles[r][c].z
             )
@@ -73,26 +59,8 @@ generateMap.prototype.render = function(playerObject){
             m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + 3*/ ) { 
 
           if( m.tiles[r][c].z < p.z && r === Math.floor( p.y / m.tileHeightHalf ) || r > Math.floor( p.y / m.tileHeightHalf ) ) {
-  
-            let img;
-
-            switch(m.tiles[r][c].type) {
-              case 1:
-                img = grass;
-                break;
-              case 2:
-                img = dirt;
-                break;
-              case 3:
-                img = mud;
-                break;
-              case 4:
-                img = water;
-                break;
-            }
-
             ctx1.drawImage (
-              img,
+              m.tiles[r][c].type,
               m.tiles[r][c].xAbsolute,
               m.tiles[r][c].yAbsolute + m.tiles[r][c].z
             )

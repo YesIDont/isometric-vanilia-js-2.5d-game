@@ -103,12 +103,12 @@ function generateMap(
     let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-  // this.randomizeTerrain();
+  this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
   // this.makeHoles();
-  // this.makeBumps();
-  // this.makeHighBump();
+  this.makeBumps();
+  this.makeHighBump();
   // this.makeWall();
 
   // test falling
@@ -130,7 +130,7 @@ generateMap.prototype.randomizeTerrain = function() {
   let that = this;
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
-      let rndLevel = Math.floor( (Math.random() * 3) );
+      let rndLevel = Math.floor( (Math.random() * 2) );
       let rndSign = Math.random() < 0.5 ? -1 : 1;
       that.tiles[r][c].z = rndSign > 0 ? rndLevel : -rndLevel;
     }
@@ -142,7 +142,7 @@ generateMap.prototype.fallFromLeft = function() {
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
       that.tiles[r][c].z += z;
-      z += 5;
+      z += 4;
     }
     z = 0;
   }
@@ -150,10 +150,9 @@ generateMap.prototype.fallFromLeft = function() {
 generateMap.prototype.fallFromTop = function() {
   let that = this;
   let z = 0;
-  let i = Math.floor( (Math.random() * 4) ) + 1;
   for(r = 0; r < that.tiles.length; r++) {
-    for(c = ( that.tiles[r].length / i ) + 5; c < that.tiles[r].length; c++) {
-      that.tiles[r][c].z += z;      
+    for(c = ( that.tiles[r].length / 2 ) + 5; c < that.tiles[r].length; c++) {
+      that.tiles[r][c].z += z;
     }
     z += 3;
   }
@@ -161,7 +160,7 @@ generateMap.prototype.fallFromTop = function() {
 generateMap.prototype.makeHoles = function(){
   let that = this;
   if(typeof this.randomTile !== undefined) {
-    for(i = 0; i < 300; i++) {
+    for(i = 0; i < 4096; i++) {
       let rnd = that.randomTile();
       rnd.z += 20;
     }
@@ -170,7 +169,7 @@ generateMap.prototype.makeHoles = function(){
 generateMap.prototype.makeBumps = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < 1200; i++) {
+      for(i = 0; i < 8192; i++) {
         let rnd = that.randomTile();
         rnd.z -= 20;
       }      
@@ -187,7 +186,7 @@ generateMap.prototype.moveOneTile = function(r, c, value) {
 generateMap.prototype.makeHighBump = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < 30; i++) {
+      for(i = 0; i < 4096; i++) {
         let rnd = that.randomTile();
         rnd.z -= 67;
       };
@@ -324,7 +323,7 @@ generateMap.prototype.cameraUpdate = function ( mapObject, x, y, z ) {
   if( -(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) - m.zMax &&
       -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) + (m.clipByTiles * m.tileWidth) - m.zMin  ) {
 
-      m.offsetTopLeft.y = -(y - canvasHeightHalf);
+      m.offsetTopLeft.y = -(y + z - canvasHeightHalf);
   }    
 
   // update bottom right x offset
@@ -338,7 +337,7 @@ generateMap.prototype.cameraUpdate = function ( mapObject, x, y, z ) {
   if( m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth + m.zMax  &&
       m.mapHeight - y - canvasHeightHalf < m.mapHeight - canvasHeight - (m.clipByTiles * m.tileWidth) + m.zMin ) {
 
-      m.offsetBottomRight.y = m.mapHeight - y - canvasHeightHalf;
+      m.offsetBottomRight.y = m.mapHeight - y + z - canvasHeightHalf;
   }
 
   m.updateTilesOutside();
