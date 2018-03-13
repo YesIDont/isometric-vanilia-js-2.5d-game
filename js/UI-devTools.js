@@ -27,6 +27,7 @@ let devToolsSet = [
   ["Map height: ",  { update: function () { return map.mapHeight }}],
   ["Tiles horizontaly: ",  { update: function () { return map.xTilesNumber }}],
   ["Tiles verticaly: ",  { update: function () { return map.yTilesNumber }}],
+  ["Total number of tiles: ",  { update: function () { return (map.xTilesNumber * map.yTilesNumber) }}],
   ["Tile width: ",  { update: function () { return map.tileWidth }}],
   ["Tile height: ",  { update: function () { return map.tileHeight }}],
 
@@ -41,7 +42,6 @@ let devToolsSet = [
   ["Tiles outside canvas right: ",  { update: function () { return map.tilesOutsideCanvas.right }}],
   ["Tiles outside canvas top: ",  { update: function () { return map.tilesOutsideCanvas.top }}],
   ["Tiles outside canvas bottom: ",  { update: function () { return map.tilesOutsideCanvas.bottom }}],
-  ["Total number of tiles: ",  { update: function () { return (map.xTilesNumber * map.yTilesNumber) }}],
 
   ["Mouse",  { update: function () { return "" }}],
   ["xMouse: ",  { update: function () { return xMouse }}],

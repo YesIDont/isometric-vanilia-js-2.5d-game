@@ -7,7 +7,7 @@ canvas {
   left: 0;
 }
 .container-fluid {
-	max-height: 90vh;
+	padding: 0;
 }
 .ui, .ui * {
 	z-index: 10;
@@ -30,10 +30,10 @@ canvas {
 	right: 10px;
 }
 #devTools {
-	font-size: 14px;
+	font-size: 12px;
 	margin: 0;
 	padding: 0;
-	max-height: 80vh;
+	max-height: 92vh;
 }
 #devTools li {
 	list-style: none;	
@@ -51,7 +51,7 @@ canvas {
 }
 #right-sidebar {
 	max-width: 260px;
-	margin-top: 20px;
+	margin-top: 0;
 }
 
 #right-sidebar > div {
