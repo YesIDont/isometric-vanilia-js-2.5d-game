@@ -6,27 +6,57 @@ canvas {
   top: 0;
   left: 0;
 }
-.button-options {
+.container-fluid {
+	max-height: 90vh;
+}
+.ui, .ui * {
+	z-index: 10;
+}
+.button {
 	background: none;
 	height: 24px;
 	width: 24px;
 	position: fixed;
-	top: 10px;
-	right: 10px;
 	margin: 0;
 	padding: 0;
 	z-index: 10;
 }
-.button-select-tool {
-	background: none;
-	height: 24px;
-	width: 24px;
-	position: fixed;
+#options {
+	top: 10px;
+	right: 10px;
+}
+#select-tool {
 	top: 40px;
 	right: 10px;
+}
+#devTools {
+	font-size: 14px;
 	margin: 0;
 	padding: 0;
-	z-index: 10;
+	max-height: 80vh;
+}
+#devTools li {
+	list-style: none;	
+}
+#devTools li.info-item {
+	margin-left: 10px;
+}
+#devTools li span {
+	color: #b00808;
+	
+}
+#devTools .header {
+	text-transform: uppercase;
+	font-weight: bold; 
+}
+#right-sidebar {
+	max-width: 260px;
+	margin-top: 20px;
+}
+
+#right-sidebar > div {
+	height: height: 90vh;
+	overflow-y: scroll;
 }
 
 body > canvas {

@@ -52,6 +52,10 @@ function setCanvas() {
   let vignette = document.querySelector("#vignette");
   vignette.width = canvasWidth;
   vignette.height = canvasHeight;
+
+  let container = document.querySelector(".container-fluid");
+  container.style.width = canvasWidth;
+  container.style.height = canvasHeight;
 };
 setCanvas();
 
@@ -119,8 +123,8 @@ player.collisionModel = new player.calcCollisionModel(map, player);
 
 // create UI
 // element, text, css, link, path
-let buttonOptions = new newUiItem("a", "", "button-options", "#", "ico-options.svg", "ico-options-h.svg");
-let selectTool = new newUiItem("a", "", "button-select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg");
+let buttonOptions = new newUiItem("a", "", "button", "options", "#right-sidebar", "ico-options.svg", "ico-options-h.svg", true);
+let selectTool = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false);
 
 
 // Keyboard controls

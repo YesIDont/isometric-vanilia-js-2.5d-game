@@ -1,11 +1,13 @@
-function newUiItem (element, text, css, link, path, hoverPath){
+function newUiItem (element, text, cssClass, cssID, link, path, hoverPath, collapse){
 	this.el = element;
 	this.node = document.createElement(this.el);
 	this.text = text;	
 	this.link = link;
-	this.cssClass = css;
+	this.cssClass = cssClass;
+	this.cssID = cssID;
 	this.path = path;
 	this.hoverPath = hoverPath;
+	this.collapse = collapse;
 };
 
 newUiItem.prototype.appendText = function() {
@@ -16,12 +18,19 @@ newUiItem.prototype.appendCSSclass = function() {
 	this.node.className = this.cssClass;
 };
 
-newUiItem.prototype.setBackground = function(){
+newUiItem.prototype.appendCSSid = function() {
+	this.node.id = this.cssID;
+};
+newUiItem.prototype.setCollapse = function() {
+	this.node.setAttribute("data-toggle", "collapse");
+};
+
+newUiItem.prototype.setBackground = function() {
 	var that = this;
 	var el = document.querySelector("head style#dynamicStyle").sheet;
-	var background = "." + this.cssClass + " { background: transparent url(img/" + this.path + ") no-repeat top right }";
-	var addHover = "." + this.cssClass + ":hover { background: transparent url(img/" + this.hoverPath + ") no-repeat top right; }";
-	var addFocus = "." + this.cssClass + ":focus { background: transparent url(img/" + this.hoverPath + ") no-repeat top right; }";
+	var background = "#" + this.cssID + " { background: transparent url(img/" + this.path + ") no-repeat top right }";
+	var addHover = "#" + this.cssID + ":hover { background: transparent url(img/" + this.hoverPath + ") no-repeat top right; }";
+	var addFocus = "#" + this.cssID + ":focus { background: transparent url(img/" + this.hoverPath + ") no-repeat top right; }";
 
 	var l = el.cssRules.length;
 
@@ -29,11 +38,11 @@ newUiItem.prototype.setBackground = function(){
 		el.insertRule(background, l);
 		el.insertRule(addHover, l + 1);
 		// el.insertRule(addFocus, l + 2);
-	} else 
-	if("addRule" in el) {
-		el.addRule(that.cssClass, "background: transparent url(img/" + that.path + ") no-repeat top right }", l);
-		el.addRule(that.cssClass + ":hover", "background: transparent url(img/" + that.hoverPath + ") no-repeat top right;", l + 1);
-		el.addRule(that.cssClass + ":focus", "background: transparent url(img/" + that.hoverPath + ") no-repeat top right;", l + 2);
+
+	} else if("addRule" in el) {
+		el.addRule(that.cssID, "background: transparent url(img/" + that.path + ") no-repeat top right }", l);
+		el.addRule(that.cssID + ":hover", "background: transparent url(img/" + that.hoverPath + ") no-repeat top right;", l + 1);
+		// el.addRule(that.ID + ":focus", "background: transparent url(img/" + that.hoverPath + ") no-repeat top right;", l + 2);
 	}
 }
 
@@ -51,6 +60,8 @@ newUiItem.prototype.draw = function() {
 	this.appendText();
 	this.appendLink();
 	this.appendCSSclass();
+	this.appendCSSid();
+	if( this.collapse ){ this.setCollapse() };
 	this.setBackground();
 	document.body.appendChild(this.node);
 };

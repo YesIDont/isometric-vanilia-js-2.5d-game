@@ -9,7 +9,7 @@ dirt.src = "img/map/grass_77x100px_block2.png",
 mud.src = "img/map/grass_77x100px_block3.png",
 water.src = "img/map/grass_77x100px_block4.png";
 
-function generateMap(
+function generateMap (
     // input
     xTilesNumber, 
     yTilesNumber, 
@@ -106,7 +106,7 @@ function generateMap(
   this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
-  // this.makeHoles();
+  this.makeHoles();
   this.makeBumps();
   this.makeHighBump();
   // this.makeWall();
