@@ -146,7 +146,7 @@ document.addEventListener("keyup", releaseKey, false);
 // Mouse controls
 // ===========================================================
 
-// Mouse collision point
+// Mouse collision polygon (1x)
 let mousePoly = new P(new V(-1, -1), [
   new V(1, 1),
   new V(1, 1),
@@ -154,21 +154,39 @@ let mousePoly = new P(new V(-1, -1), [
   new V(1, 1)
 ]);
 
-// Tracking mouse position
-document.onmousemove = function (e) {  
+// Mouse position related functions
+function updateMapMousePosition() {
+  mousePoly.pos.x = xMouse + Math.abs( map.offsetTopLeft.x );
+  mousePoly.pos.y = yMouse + Math.abs( map.offsetTopLeft.y );
+}
+
+function trackMouse( e ) {
   e = e || window.event;
   xMouse = e.pageX;
   yMouse = e.pageY;
 
   // IE 8
-  if (xMouse === undefined) {
+  if ( xMouse === undefined ) {
     xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
     yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
-  
-  mousePoly.pos.x = xMouse + Math.abs( map.offsetTopLeft.x );
-  mousePoly.pos.y = yMouse + Math.abs( map.offsetTopLeft.y );
+
+  updateMapMousePosition();
 }
+
+document.onmousemove = trackMouse;
+
+
+// onmousedown related functions
+function moveTileVerticaly() {
+  mousePoly.pos.z += yMouse;
+}
+
+function onMouseDownTasks() {
+  if( selectTilesSwitch ){ moveTileVerticaly() }
+}
+
+document.onmousedown = onMouseDownTasks;
 
 
 // The main game loop
@@ -196,7 +214,7 @@ let animate = function () {
 
   if(selectTilesSwitch){fillSelectedTile(ctx1, map)}
 
-    if(devToolsSwitch){devTools(ctx1);}
+  if(devToolsSwitch){devTools(ctx1);}
 
   // Request to do this again ASAP 
   requestAnimationFrame(animate);
