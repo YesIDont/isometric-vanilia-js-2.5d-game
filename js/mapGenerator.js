@@ -75,6 +75,7 @@ function generateMap (
     bottom: Math.floor(this.offsetBottomRight.y / this.tileHeight),
     left:   Math.floor(this.offsetTopLeft.x / this.tileWidth)
   };
+  this.selectedTile = [];
 
   // Tiles on 0 level generaotr - layer 0
   

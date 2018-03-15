@@ -43,8 +43,8 @@ function selectTilesSwitcher(){
 function fillSelectedTile( ctx, mapObject ) {
   let m = mapObject;
   
-  let rP = Math.floor( ( yMouse + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
-  let cP = Math.floor( ( xMouse + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
+  let rP = Math.floor( ( mouse.y + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
+  let cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
 
   let col;
 
@@ -64,9 +64,11 @@ function fillSelectedTile( ctx, mapObject ) {
             map.tiles[r][c].base.stroke( ctx, "rgb(0, 0, 255)" );
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
-            customMessage( ctx, "r: " + r, xMouse, yMouse, 40, -10, 20 );
-            customMessage( ctx, "c: " + c, xMouse, yMouse, 40, 10, 20 );
+            customMessage( ctx, "r: " + r, mouse.x, mouse.y, 40, -10, 20 );
+            customMessage( ctx, "c: " + c, mouse.x, mouse.y, 40, 10, 20 );
             ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
+
+            if( !mouse.isDown ) { m.selectedTile = m.tiles[r][c]; };
           }
         }  
       }

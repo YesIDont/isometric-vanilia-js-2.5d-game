@@ -30,6 +30,7 @@ let devToolsSet = [
   ["Total number of tiles: ",  { update: function () { return (map.xTilesNumber * map.yTilesNumber) }}],
   ["Tile width: ",  { update: function () { return map.tileWidth }}],
   ["Tile height: ",  { update: function () { return map.tileHeight }}],
+  ["Selected tile: ",  { update: function () { return map.selectedTile }}],
 
   ["Map offset in px",  { update: function () { return "" }}],
   ["Left top offset x: ",  { update: function () { return map.offsetTopLeft.x }}],
@@ -44,10 +45,11 @@ let devToolsSet = [
   ["Tiles outside canvas bottom: ",  { update: function () { return map.tilesOutsideCanvas.bottom }}],
 
   ["Mouse",  { update: function () { return "" }}],
-  ["xMouse: ",  { update: function () { return xMouse }}],
-  ["yMouse: ",  { update: function () { return yMouse }}],
+  ["xMouse: ",  { update: function () { return mouse.x }}],
+  ["yMouse: ",  { update: function () { return mouse.y }}],
   ["Mouse poly x: ",  { update: function () { return mousePoly.pos.x }}],
   ["Mouse poly y: ",  { update: function () { return mousePoly.pos.y }}],
+  ["Is mouse down?: ",  { update: function () { return mouse.isDown }}],
 
   ["Camera - canvas",  { update: function () { return "" }}],
   ["Canvas width: ",  { update: function () { return canvasWidth }}],

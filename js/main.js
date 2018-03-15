@@ -6,7 +6,8 @@ let layer1 = document.createElement("canvas"),
     ctx1 = layer1.getContext("2d"),
     // ctx2 = layer2.getContext("2d"),
     // ctx3 = layer3.getContext("2d"),
-    canvasWidth, canvasHeight, canvasWidthHalf, canvasHeightHalf, xMouse, yMouse;
+    canvasWidth, canvasHeight, canvasWidthHalf, canvasHeightHalf,
+    mouse = {x: 0, y: 0, xLast: 0, yLast: 0, isDown: false};
 
     // below is used when dynamicly creting css styles:
     // head letiable alows to refrence html head element
@@ -156,37 +157,44 @@ let mousePoly = new P(new V(-1, -1), [
 
 // Mouse position related functions
 function updateMapMousePosition() {
-  mousePoly.pos.x = xMouse + Math.abs( map.offsetTopLeft.x );
-  mousePoly.pos.y = yMouse + Math.abs( map.offsetTopLeft.y );
+  mousePoly.pos.x = mouse.x + Math.abs( map.offsetTopLeft.x );
+  mousePoly.pos.y = mouse.y + Math.abs( map.offsetTopLeft.y );
 }
 
-function trackMouse( e ) {
+// move grabbed tile verticaly
+function dragTileVerticaly() {
+  // console.log("l");
+  let ms = mouse.y - mouse.yLast;
+  map.selectedTile.z += ms;  
+}
+
+function mouseMove( e ) {
   e = e || window.event;
-  xMouse = e.pageX;
-  yMouse = e.pageY;
+  mouse.x = e.pageX;
+  mouse.y = e.pageY;
 
   // IE 8
-  if ( xMouse === undefined ) {
-    xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-    yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+  if ( mouse.x === undefined ) {
+    mouse.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    mouse.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
 
   updateMapMousePosition();
+  if( mouse.isDown && selectTilesSwitch ) { dragTileVerticaly() };
+
+  mouse.xLast = mouse.x;
+  mouse.yLast = mouse.y;
 }
 
-document.onmousemove = trackMouse;
+function mouseDown() { mouse.isDown = true; };
+function mouseUp() { mouse.isDown = false };
+
+document.onmousemove = mouseMove;
+document.onmouseup = mouseUp;
+document.onmousedown = mouseDown;
 
 
-// onmousedown related functions
-function moveTileVerticaly() {
-  mousePoly.pos.z += yMouse;
-}
 
-function onMouseDownTasks() {
-  if( selectTilesSwitch ){ moveTileVerticaly() }
-}
-
-document.onmousedown = onMouseDownTasks;
 
 
 // The main game loop
