@@ -51,9 +51,16 @@ newUiItem.prototype.appendLink = function() {
 		this.node.href = this.link;
 	}
 };
+
 newUiItem.prototype.listen = function(fnToDo) {
 	let node = this.node;
 	node.addEventListener("click", fnToDo, false);
+};
+
+newUiItem.prototype.appendElement = function(fnToDo) {
+	let destination = document.querySelector("#right-sidebar");
+	let before = document.querySelector("#optionsBox");
+	destination.insertBefore(this.node, before);
 };
 
 newUiItem.prototype.draw = function() {
@@ -63,5 +70,5 @@ newUiItem.prototype.draw = function() {
 	this.appendCSSid();
 	if( this.collapse ){ this.setCollapse() };
 	this.setBackground();
-	document.body.appendChild(this.node);
+	this.appendElement();
 };

@@ -7,7 +7,7 @@
     <title>Soletaken</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap.css">
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -15,16 +15,53 @@
 
   <body>
     <div class="container-fluid ui">
-      <div class="row no-gutters">
-        <div class="col-sm">
-          <div class="collapse" id="right-sidebar">
+      <div class="row">
+
+        <div class="col" id="left-sidebar">
+          <div id="devTools" class="collapse">
             <div class="card card-body">
-              <ul id="devTools">
+              <ul>
               </ul>
-            </div>
+            </div>            
           </div>
         </div>
-      </div>
+
+        <div class="col" id="middle">
+
+        </div>
+
+        <div class="col" id="right-sidebar">
+          <div id="optionsBox" class="collapse">
+            <div class="card card-body">
+              <form>
+                <label for="name">Tiles grid</label>
+                <input class="checkTileGrid" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Camrea (canvas) center</label>
+                <input class="checkCanvasCenter" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player collision area</label>
+                <input class="checkCollisionArea" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player position</label>
+                <input class="checkPlayerPosition" type="checkbox" value="0">
+                <br />                
+
+                <label for="name">Player collision base polygon</label>
+                <input class="checkPlayerBase" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player collision 1px point</label>
+                <input class="checkPlayerPoint" type="checkbox" value="0">
+              </form>
+            </div>            
+          </div>
+        </div>
+
+      </div>      
     </div>
 
     <div id="vignette"></div>
@@ -33,13 +70,13 @@
     <!-- JavaScript -->
     <!-- ================================================== -->
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="js/jQuery3-2-1.js"></script>
     
     <!-- Popper.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="js/popper.js"></script>
 
     <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/bootstrap4.js"></script>
 
     <!-- Game JS -->
     <script src="js/sat.js" type="text/javascript"></script>

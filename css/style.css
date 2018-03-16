@@ -6,58 +6,6 @@ canvas {
   top: 0;
   left: 0;
 }
-.container-fluid {
-	padding: 0;
-}
-.ui, .ui * {
-	z-index: 10;
-}
-.button {
-	background: none;
-	height: 24px;
-	width: 24px;
-	position: fixed;
-	margin: 0;
-	padding: 0;
-	z-index: 10;
-}
-#options {
-	top: 10px;
-	right: 10px;
-}
-#select-tool {
-	top: 40px;
-	right: 10px;
-}
-#devTools {
-	font-size: 12px;
-	margin: 0;
-	padding: 0;
-	max-height: 92vh;
-}
-#devTools li {
-	list-style: none;	
-}
-#devTools li.info-item {
-	margin-left: 10px;
-}
-#devTools li span {
-	color: #b00808;
-	
-}
-#devTools .header {
-	text-transform: uppercase;
-	font-weight: bold; 
-}
-#right-sidebar {
-	max-width: 260px;
-	margin-top: 0;
-}
-
-#right-sidebar > div {
-	height: height: 90vh;
-	overflow-y: scroll;
-}
 
 body > canvas {
 	position: absolute;
@@ -84,4 +32,95 @@ body > canvas {
 	top: 0;
 	left: 0;
 	display: none;
+}
+
+.ui, .ui * {
+	z-index: 10;
+}
+
+/* buttons right sidebar */
+.button {
+	background: none;
+	display: block;
+	height: 24px;
+	width: 24px;
+	margin: 0 0 5px 0;
+	padding: 0;
+	z-index: 10;
+	margin-left: auto;
+}
+
+
+/* UI - bootstrap flex columns */
+.container-fluid {
+	/*padding: 0;*/
+	overflow: hidden;
+}
+.row {
+	padding: 15px 0;
+	min-height: 80vh;
+}
+#right-sidebar {
+	text-align: right;
+}
+#right-sidebar .card {
+	font-size: 12px;
+/*	position: absolute !important;
+	right: 50px;
+	top: 0;*/
+}
+#optionsBox {
+	position: absolute;
+	right: 15px;
+}
+
+#middle,
+#middle > div,
+#middle > div > div,
+#right-sidebar {
+	background: transparent;
+	border: none;
+}
+#middle {
+	text-align: center;
+}
+
+#left-sidebar > div {	
+	max-width: 260px;
+	margin-top: 0;
+}
+#left-sidebar > div > div {
+	height: height: 90vh;
+	background-color: rgba(0,0,0,0.4);
+	color: #fff;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+#devTools ul {
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	max-height: 92vh;
+	pointer-events: none;
+   	cursor: default;
+}
+#devTools ul > li {
+	list-style: none;	
+}
+#devTools ul > li.info-item {
+	margin-left: 10px;
+}
+#devTools ul > li span {
+	color: #54edff;
+	
+}
+#devTools .header {
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #ffbd00;
+}
+
+label {
+	margin: 0 5px;
 }

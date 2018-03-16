@@ -104,12 +104,12 @@ function generateMap (
     let r = Math.floor( (Math.random() * that.xTilesNumber) );    
     return that.tiles[c][r]
   };  
-  this.randomizeTerrain();
+  // this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
-  this.makeHoles();
-  this.makeBumps();
-  this.makeHighBump();
+  // this.makeHoles();
+  // this.makeBumps();
+  // this.makeHighBump();
   // this.makeWall();
 
   // test falling
@@ -321,8 +321,8 @@ generateMap.prototype.cameraUpdate = function ( mapObject, x, y, z ) {
   }
 
   // update top left y offset 
-  if( -(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) - m.zMax &&
-      -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) + (m.clipByTiles * m.tileWidth) - m.zMin  ) {
+  if( -(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) /*- m.zMax*/ &&
+      -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) + (m.clipByTiles * m.tileWidth) /*- m.zMin*/  ) {
 
       m.offsetTopLeft.y = -(y + z - canvasHeightHalf);
   }    
@@ -335,8 +335,8 @@ generateMap.prototype.cameraUpdate = function ( mapObject, x, y, z ) {
   }  
 
   // update bottom right y offset
-  if( m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth + m.zMax  &&
-      m.mapHeight - y - canvasHeightHalf < m.mapHeight - canvasHeight - (m.clipByTiles * m.tileWidth) + m.zMin ) {
+  if( m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth /*+ m.zMax*/  &&
+      m.mapHeight - y - canvasHeightHalf < m.mapHeight - canvasHeight - (m.clipByTiles * m.tileWidth) /*+ m.zMin*/ ) {
 
       m.offsetBottomRight.y = m.mapHeight - y + z - canvasHeightHalf;
   }

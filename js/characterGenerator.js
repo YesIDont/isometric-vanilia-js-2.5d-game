@@ -55,6 +55,9 @@ function createCharacter(playerSpeedInPx){
   
   this.collisionDetected = false;
   this.lastTileStoodOn = [0, 0]
+
+  // on how much higher tile player can step without jumping (in px)
+  this.maxStepWithouJump = 15;
 };
 
 // Methods
@@ -248,7 +251,7 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                 // m.fillOneTileBase(ctx, "rgba(89, 178, 234, 0.3)", r, c);
 
                 // fill base of tiles that could be / are colliding with player
-                if( m.tiles[r][c].z > p.z + 10 || m.tiles[r][c].z < p.z - 10 ) {
+                if( m.tiles[r][c].z > p.z + p.maxStepWithouJump || m.tiles[r][c].z < p.z - p.maxStepWithouJump ) {
                   m.fillOneTileBase(ctx, "rgba(255, 0, 0, 0.4)", r, c);
                 }
                 let player = cm.base.point;
@@ -298,7 +301,7 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
 
                 // continue to SAT collision test if given tile is on different map level +/- 10 than player
                 // and tile is higher than player
-                if( m.tiles[r][c].z < p.z && ( m.tiles[r][c].z > p.z + 10 || m.tiles[r][c].z < p.z - 10 ) ) {
+                if( m.tiles[r][c].z < p.z && ( m.tiles[r][c].z > p.z + p.maxStepWithouJump || m.tiles[r][c].z < p.z - p.maxStepWithouJump ) ) {
 
                   // set variables for collision test
                   let player = cm.base.poly;
@@ -354,7 +357,7 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                     
                     if( m.tiles[r][c].z !== p.z && ( 37 in keysDown || 38 in keysDown || 39 in keysDown || 40 in keysDown ) ) {
 
-                      if( Math.abs( p.z - m.tiles[r][c].z ) >= 10 ) {
+                      if( Math.abs( p.z - m.tiles[r][c].z ) >= p.maxStepWithouJump ) {
                         p.zV = 5;
 
                       } else {

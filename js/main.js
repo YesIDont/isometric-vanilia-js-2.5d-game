@@ -54,9 +54,6 @@ function setCanvas() {
   vignette.width = canvasWidth;
   vignette.height = canvasHeight;
 
-  let container = document.querySelector(".container-fluid");
-  container.style.width = canvasWidth;
-  container.style.height = canvasHeight;
 };
 setCanvas();
 
@@ -100,8 +97,8 @@ window.addEventListener("resize", setCanvas, false);
 // generate map
 // ===========================================================
 let map = new generateMap(
-  256,    // horizontal number of tiles
-  256,    // vertical number of tiles
+  64,    // horizontal number of tiles
+  64,    // vertical number of tiles
   74,       // tile twidth
   40,       // tile heigh
   "center",  // map starting x position
@@ -124,8 +121,11 @@ player.collisionModel = new player.calcCollisionModel(map, player);
 
 // create UI
 // element, text, css, link, path
-let buttonOptions = new newUiItem("a", "", "button", "options", "#right-sidebar", "ico-options.svg", "ico-options-h.svg", true);
 let selectTool = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false);
+let selectMultiple = new newUiItem("a", "", "button", "select-multiple", "#", "ico-select-multiple.svg", "ico-select-multiple-h.svg", false);
+
+let measurments = new newUiItem("a", "", "button", "measurments", "#devTools", "ico-measurments.svg", "ico-measurments-h.svg", true);
+let options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true);
 
 
 // Keyboard controls
@@ -134,7 +134,7 @@ let keysDown = [];
 
 function pressKey(e) {
   keysDown[e.keyCode] = true;
-}
+} 
 
 function releaseKey(e) {
   delete keysDown[e.keyCode];
@@ -222,7 +222,7 @@ let animate = function () {
 
   if(selectTilesSwitch){fillSelectedTile(ctx1, map)}
 
-  if(devToolsSwitch){devTools(ctx1);}
+  devTools(ctx1);
 
   // Request to do this again ASAP 
   requestAnimationFrame(animate);
@@ -234,9 +234,10 @@ window.addEventListener("load", function() {
   animate();
 
   // Let there be UI!
-  buttonOptions.draw();
-  buttonOptions.listen(devToolsSwitcher);
-
   selectTool.draw();
   selectTool.listen(selectTilesSwitcher)
+  selectMultiple.draw();
+
+  measurments.draw();  
+  options.draw();
 });

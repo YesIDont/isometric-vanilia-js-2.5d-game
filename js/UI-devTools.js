@@ -1,3 +1,4 @@
+let checkedValue;
 let devToolsSet = [
   ["Player",  { update: function () { return "" }}],
   ["x: ",  { update: function () { return player.x }}],
@@ -53,11 +54,11 @@ let devToolsSet = [
 
   ["Camera - canvas",  { update: function () { return "" }}],
   ["Canvas width: ",  { update: function () { return canvasWidth }}],
-  ["Canvas height: ",  { update: function () { return canvasHeight }}]  
+  ["Canvas height: ",  { update: function () { return canvasHeight }}]
 ]
 
 function insertUL() {
-	let ul = document.querySelector("#devTools"), li;
+	let ul = document.querySelector("#devTools > div > ul"), li;
 	let tmp;
 	for( i = 0; i < devToolsSet.length; i++ ) {
 
@@ -79,58 +80,7 @@ function insertUL() {
 insertUL();
 
 function updateDevToolsInfo() {
-	let temp;
 	for( i = 0; i < devToolsSet.length; i++ ) {
 		devToolsSet[i][3].innerHTML = devToolsSet[i][1].update();
 	}	
 }
-
-	// "x: ",  player.x }}],
-	// "y: ",  player.y }}],
-	// "z: ",  player.z }}],
-
-	// "Left top offset x: ",  map.offsetTopLeft.x,  " px" }}],
-	// "Left top offset y: ",  map.offsetTopLeft.y,  " px" }}],
-	// "Right bottom offset x: ",  map.offsetBottomRight.x,  " px" }}],
-	// "Right bottom offset y: ",  map.offsetBottomRight.y,  " px" }}],
-
-	// "xMouse: ",  xMouse }}],
-	// "yMouse: ",  yMouse }}],
-	// "Mouse poly x: ",  mousePoly.pos.x }}],
-	// "Mouse poly y: ",  mousePoly.pos.y }}],
-
-	// "Tiles outside canvas left: ",  map.tilesOutsideCanvas.left }}],
-	// "Tiles outside canvas right: ",  map.tilesOutsideCanvas.right }}],
-	// "Tiles outside canvas top: ",  map.tilesOutsideCanvas.top }}],
-	// "Tiles outside canvas bottom: ",  map.tilesOutsideCanvas.bottom }}],
-
-	// "Canvas width: ",  canvasWidth }}],
-	// "Canvas height: ",  canvasHeight }}],
-	// "Map width: ",  map.mapWidth }}],
-	// "Map height: ",  map.mapHeight }}],
-	// "Tiles horizontaly: ",  map.xTilesNumber }}],
-	// "Tiles verticaly: ",  map.yTilesNumber }}],
-	// "Tile width: ",  map.tileWidth }}],
-	// "Tile height: ",  map.tileHeight }}],
-
-	// "Player object speed: ",  player.speed }}],
-	// "player.xVelocity: ",  player.xVelocity }}],
-	// "player.yVelocity: ",  player.yVelocity }}],
-	// "player.x: ",  player.x }}],
-	// "player.y: ",  player.y }}],
-
-	// "Total number of tiles: ",  (map.xTilesNumber * map.yTilesNumber) }}],
-
-	// "Player collision: ",  player.collisionDetected }}],
-
-	// "player.collisionModel.area.left: ",  player.collisionModel.area.left }}],
-	// "player.collisionModel.area.top: ",  player.collisionModel.area.top }}],
-	// "player.collisionModel.area.right: ",  player.collisionModel.area.right }}],
-	// "player.collisionModel.area..bottom: ",  player.collisionModel.area.bottom }}],
-
-	// "player.collisionModel.area.points.topLeft.x: ",  player.collisionModel.area.points.topLeft.x }}],
-	// "player.collisionModel.area.points.topLeft.y: ",  player.collisionModel.area.points.topLeft.y }}],
-	// "player.collisionModel.area.points.bottomRight.x: ",  player.collisionModel.area.points.bottomRight.x }}],
-	// "player.collisionModel.area.points.bottomRight.y: ",  player.collisionModel.area.points.bottomRight.y }}],
-
-	// "player.spriteSheet.direction: ",  player.spriteSheet.direction
