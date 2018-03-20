@@ -83,18 +83,21 @@ function generateMap (
   this.createLayer();
   this.calculateTilesBase();
   
-  this.strokeAllTilesBase = function(context, color) {
-    for(r = that.tilesOutsideCanvas.top - 3; r < that.tiles.length - that.tilesOutsideCanvas.bottom + 3; r++) {
-      if(r >= 0 && r < that.tiles.length) {
-        for(c = that.tilesOutsideCanvas.left - 3; c < that.tiles[r].length - that.tilesOutsideCanvas.right + 3; c++) {
-          if(c >= 0 && c < that.tiles[r].length) {
-              that.tiles[r][c].base.stroke(context, color);
-            }
-          }
-        }
+  this.strokeAllTilesBase = function( ctx, color ) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    let i = 4;
+
+    for(r = that.tilesOutsideCanvas.top + 1; r < that.tiles.length - that.tilesOutsideCanvas.bottom - 1; r++) {
+      for(c = that.tilesOutsideCanvas.left + 1; c < that.tiles[r].length - that.tilesOutsideCanvas.right - 1; c++) {
+         that.tiles[r][c].base.strokeWithoutOptions( ctx, i );
       }
+    }
+
+    ctx.restore();
   };
-  this.fillOneTileBase = function(context, color, r, c) {
+  this.fillOneTileBase = function( context, color, r, c ) {
     that.tiles[r][c].base.fill(context, color);
   };
   
@@ -107,8 +110,8 @@ function generateMap (
   // this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
-  // this.makeHoles();
-  // this.makeBumps();
+  this.makeHoles();
+  this.makeBumps();
   // this.makeHighBump();
   // this.makeWall();
 
@@ -133,7 +136,7 @@ generateMap.prototype.randomizeTerrain = function() {
     for(c = 0; c < that.tiles[r].length; c++) {
       let rndLevel = Math.floor( (Math.random() * 2) );
       let rndSign = Math.random() < 0.5 ? -1 : 1;
-      that.tiles[r][c].z = rndSign > 0 ? rndLevel : -rndLevel;
+      that.tiles[r][c].z += rndSign > 0 ? rndLevel : -rndLevel;
     }
   }
 };
@@ -161,7 +164,7 @@ generateMap.prototype.fallFromTop = function() {
 generateMap.prototype.makeHoles = function(){
   let that = this;
   if(typeof this.randomTile !== undefined) {
-    for(i = 0; i < 4096; i++) {
+    for(i = 0; i < 300; i++) {
       let rnd = that.randomTile();
       rnd.z += 20;
     }
@@ -170,12 +173,21 @@ generateMap.prototype.makeHoles = function(){
 generateMap.prototype.makeBumps = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < 8192; i++) {
+      for(i = 0; i < 300; i++) {
         let rnd = that.randomTile();
         rnd.z -= 20;
       }      
   }   
 };
+generateMap.prototype.flatAllTiles = function() {
+  let that = this;
+
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
+       that.tiles[r][c].z = 0;
+    }
+  }
+}
 
 
 generateMap.prototype.moveOneTile = function(r, c, value) {
@@ -187,7 +199,7 @@ generateMap.prototype.moveOneTile = function(r, c, value) {
 generateMap.prototype.makeHighBump = function() {
   let that = this;
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < 4096; i++) {
+      for(i = 0; i < 100; i++) {
         let rnd = that.randomTile();
         rnd.z -= 67;
       };

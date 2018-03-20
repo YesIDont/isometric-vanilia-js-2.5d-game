@@ -97,7 +97,7 @@ window.addEventListener("resize", setCanvas, false);
 // generate map
 // ===========================================================
 let map = new generateMap(
-  64,    // horizontal number of tiles
+  32,    // horizontal number of tiles
   64,    // vertical number of tiles
   74,       // tile twidth
   40,       // tile heigh
@@ -126,6 +126,10 @@ let selectMultiple = new newUiItem("a", "", "button", "select-multiple", "#", "i
 
 let measurments = new newUiItem("a", "", "button", "measurments", "#devTools", "ico-measurments.svg", "ico-measurments-h.svg", true);
 let options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true);
+
+// UI event listeners
+document.querySelector("#ui-flatten-map").addEventListener("click", function() { map.flatAllTiles() });
+document.querySelector("#ui-randomize-z").addEventListener("click", function() { map.randomizeTerrain() });
 
 
 // Keyboard controls
@@ -156,18 +160,18 @@ let mousePoly = new P(new V(-1, -1), [
 ]);
 
 // Mouse position related functions
-function updateMapMousePosition() {
+function updateMousePositionOnMap() {
   mousePoly.pos.x = mouse.x + Math.abs( map.offsetTopLeft.x );
   mousePoly.pos.y = mouse.y + Math.abs( map.offsetTopLeft.y );
 }
 
 // move grabbed tile verticaly
 function dragTileVerticaly() {
-  // console.log("l");
   let ms = mouse.y - mouse.yLast;
   map.selectedTile.z += ms;  
 }
 
+// functions run on mouse move
 function mouseMove( e ) {
   e = e || window.event;
   mouse.x = e.pageX;
@@ -179,7 +183,8 @@ function mouseMove( e ) {
     mouse.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
 
-  updateMapMousePosition();
+  updateMousePositionOnMap();
+
   if( mouse.isDown && selectTilesSwitch ) { dragTileVerticaly() };
 
   mouse.xLast = mouse.x;
@@ -192,6 +197,10 @@ function mouseUp() { mouse.isDown = false };
 document.onmousemove = mouseMove;
 document.onmouseup = mouseUp;
 document.onmousedown = mouseDown;
+
+
+
+
 
 
 

@@ -102,11 +102,11 @@ function devToolsSwitcher(){
 }
 
 function devTools( ctx ) {  
-  if( document.querySelector(".checkTileGrid").checked ) { map.strokeAllTilesBase(ctx, "rgba(0, 0, 255, 0.2)") }; 
-  if( document.querySelector(".checkCollisionArea").checked ) { player.collisionModel.drawArea(map, player, ctx) };
-  if( document.querySelector(".checkPlayerPosition").checked ) { player.pinPoint(ctx, map, "#0000ff"); };
-  if( document.querySelector(".checkCanvasCenter").checked ) { drawCanvasCenter("#ff0000", ctx); };
-  if( document.querySelector(".checkPlayerBase").checked ) { playerBase(ctx, "rgba(255, 0, 0, 0.4)"); };
-  if( document.querySelector(".checkPlayerPoint").checked ) { player.collisionModel.base.point.fill(ctx, "rgb(255, 0, 0)"); };
+  if( document.querySelector(".checkTileGrid").checked ) { map.strokeAllTilesBase( ctx, "rgba(0, 0, 255, 0.2)" ) }; 
+  if( document.querySelector(".checkCollisionArea").checked ) { player.collisionModel.drawArea(map, player, ctx ) };
+  if( document.querySelector(".checkPlayerPosition").checked ) { player.pinPoint( ctx, map, "#0000ff") ; };
+  if( document.querySelector(".checkCanvasCenter").checked ) { drawCanvasCenter( "#ff0000", ctx ); };
+  if( document.querySelector(".checkPlayerBase").checked ) { playerBase( ctx, "rgba(255, 0, 0, 0.4)" ); };
+  if( document.querySelector(".checkPlayerPoint").checked ) { player.collisionModel.base.point.fill( ctx, "rgb(255, 0, 0)" ); };
   updateDevToolsInfo();
 };
