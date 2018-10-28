@@ -121,8 +121,8 @@ player.collisionModel = new player.calcCollisionModel(map, player);
 
 // create UI
 // element, text, css, link, path
-let selectTool = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false);
-let selectMultiple = new newUiItem("a", "", "button", "select-multiple", "#", "ico-select-multiple.svg", "ico-select-multiple-h.svg", false);
+let dragTiles = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false);
+let dragMultiple = new newUiItem("a", "", "button", "select-multiple", "#", "ico-select-multiple.svg", "ico-select-multiple-h.svg", false);
 
 let measurments = new newUiItem("a", "", "button", "measurments", "#devTools", "ico-measurments.svg", "ico-measurments-h.svg", true);
 let options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true);
@@ -185,7 +185,14 @@ function mouseMove( e ) {
 
   updateMousePositionOnMap();
 
-  if( mouse.isDown && selectTilesSwitch ) { dragTileVerticaly() };
+  if( mouse.isDown ) { 
+    if( dragTiles.isItOnOrOff ) {
+      dragTileVerticaly()
+    }
+    if( dragMultiple.isItOnOrOff ) {
+      console.log("drag multiple");
+    }
+  };
 
   mouse.xLast = mouse.x;
   mouse.yLast = mouse.y;
@@ -206,7 +213,7 @@ document.onmousedown = mouseDown;
 
 
 
-// The main game loop
+// The game main loop
 // ===========================================================
 let animate = function () {
   // this allows for acurate canvas clean,
@@ -229,7 +236,7 @@ let animate = function () {
   
   
 
-  if(selectTilesSwitch){fillSelectedTile(ctx1, map)}
+  if(dragTiles.isItOnOrOff){fillSelectedTile(ctx1, map)}
 
   devTools(ctx1);
 
@@ -243,9 +250,8 @@ window.addEventListener("load", function() {
   animate();
 
   // Let there be UI!
-  selectTool.draw();
-  selectTool.listen(selectTilesSwitcher)
-  selectMultiple.draw();
+  dragTiles.draw();
+  dragMultiple.draw();
 
   measurments.draw();  
   options.draw();

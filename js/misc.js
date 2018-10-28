@@ -1,3 +1,6 @@
+var optionsSwitch = false,
+    selectTilesSwitch = false;
+
 // Custom message constructor
 function customMessage(ctx, message, x, y, xOffset, yOffset, fontSize, resetCanvasTransform) {
 	if(resetCanvasTransform) {ctx.setTransform(1, 0, 0, 1, 0, 0);}
@@ -32,34 +35,35 @@ function playerBase(ctx, color) {
 };
 
 
-// switcher function - takes bloan variable as input and switches ture/fals
-function bolSwitch(variable){
+// switcher function - takes variable as input and switches its ture/fals value
+function boleanSwitcher(variable){
   variable = variable === true ? false : true;
 }
 
 
-let optionsSwitch = false;
 
-bolSwitch(optionsSwitch);
+
+boleanSwitcher(optionsSwitch);
+
 function optionsSwitcher(){
   optionsSwitch = optionsSwitch === true ? false : true;
 }
 
 
 
-let selectTilesSwitch = false;
+
 
 function selectTilesSwitcher(){
   selectTilesSwitch = selectTilesSwitch === true ? false : true;
 }
 
 function fillSelectedTile( ctx, mapObject ) {
-  let m = mapObject;
+  var m = mapObject;
   
-  let rP = Math.floor( ( mouse.y + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
-  let cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
+  var rP = Math.floor( ( mouse.y + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
+  var cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
 
-  let col;
+  var col;
 
   for( r = rP - 2; r < rP + 2; r++ ) {
     if( r >= 0 && r < m.tiles.length ) {
@@ -67,7 +71,7 @@ function fillSelectedTile( ctx, mapObject ) {
       for( c = cP - 1; c < cP + 1; c++ ) {
         if( c >= 0 && c < m.tiles[r].length ) {
 
-          let re = new SAT.Response();
+          var re = new SAT.Response();
           re.clear();          
 
           col = mousePoly.collidesWith(m.tiles[r][c].base, re);
@@ -95,7 +99,7 @@ function fillSelectedTile( ctx, mapObject ) {
 }
 
 
-let devToolsSwitch = false;
+var devToolsSwitch = false;
 
 function devToolsSwitcher(){
   devToolsSwitch = devToolsSwitch === true ? false : true;

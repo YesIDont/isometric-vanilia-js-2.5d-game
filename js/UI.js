@@ -8,6 +8,7 @@ function newUiItem (element, text, cssClass, cssID, link, path, hoverPath, colla
 	this.path = path;
 	this.hoverPath = hoverPath;
 	this.collapse = collapse;
+	this.isItOnOrOff = false;
 };
 
 newUiItem.prototype.appendText = function() {
@@ -52,14 +53,25 @@ newUiItem.prototype.appendLink = function() {
 	}
 };
 
-newUiItem.prototype.listen = function(fnToDo) {
-	let node = this.node;
-	node.addEventListener("click", fnToDo, false);
+newUiItem.prototype.listenCustomFunction = function(fnToDo) {
+	this.node.addEventListener("click", fnToDo, false);
 };
 
-newUiItem.prototype.appendElement = function(fnToDo) {
-	let destination = document.querySelector("#right-sidebar");
-	let before = document.querySelector("#optionsBox");
+newUiItem.prototype.turnOnOff = function () {
+	this.isItOnOrOff = this.isItOnOrOff === true ? false : true;
+}
+
+newUiItem.prototype.turnOnOffListen = function () {
+	var that = this;
+	this.node.addEventListener("click", function() {
+		that.isItOnOrOff = that.isItOnOrOff === true ? false : true;
+	}, false);
+	
+}
+
+newUiItem.prototype.appendElement = function() {
+	var destination = document.querySelector("#right-sidebar");
+	var before = document.querySelector("#optionsBox");
 	destination.insertBefore(this.node, before);
 };
 
@@ -71,4 +83,5 @@ newUiItem.prototype.draw = function() {
 	if( this.collapse ){ this.setCollapse() };
 	this.setBackground();
 	this.appendElement();
+	this.turnOnOffListen();
 };

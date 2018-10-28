@@ -104,7 +104,7 @@ createCharacter.prototype.move = function(playerObject, mapObject) {
         p.collisionModel.area.points.bottomRight.x += p.speed;
         p.collisionModel.area.right = Math.floor((m.mapWidth - p.collisionModel.area.points.bottomRight.x) / m.tileWidth);       
 
-      };     
+      };
 
       // Update number of tiles outside canvas
       m.updatetilesOutside_x();
