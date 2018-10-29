@@ -1,6 +1,6 @@
 // Create the canvas
 // ===========================================================
-let layer1 = document.createElement("canvas"),
+var layer1 = document.createElement("canvas"),
     // layer2 = document.createElement("canvas"),
     // layer3 = document.createElement("canvas"),
     ctx1 = layer1.getContext("2d"),
@@ -50,7 +50,7 @@ function setCanvas() {
   // layer3.width = canvasWidth;
   // layer3.height = canvasHeight;
   
-  let vignette = document.querySelector("#vignette");
+  var vignette = document.querySelector("#vignette");
   vignette.width = canvasWidth;
   vignette.height = canvasHeight;
 
@@ -69,9 +69,9 @@ window.addEventListener("resize", setCanvas, false);
 // Set animation engine width requestAnimationFrame
 // ===========================================================
 (function() {
-  let lastTime = 0;
-  let vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
     window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
                                || window[vendors[x]+'CancelRequestAnimationFrame'];
@@ -79,9 +79,9 @@ window.addEventListener("resize", setCanvas, false);
 
   if (!window.requestAnimationFrame)
     window.requestAnimationFrame = function(callback, element) {
-        let currTime = new Date().getTime();
-        let timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        let id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
           timeToCall);
         lastTime = currTime + timeToCall;
         return id;
@@ -96,7 +96,7 @@ window.addEventListener("resize", setCanvas, false);
 
 // generate map
 // ===========================================================
-let map = new generateMap(
+var map = new generateMap(
   32,    // horizontal number of tiles
   64,    // vertical number of tiles
   74,       // tile twidth
@@ -109,7 +109,7 @@ let map = new generateMap(
 
 
 // create player
-let player = new createCharacter(
+var player = new createCharacter(
   3 // movment speed
 );
 
@@ -120,12 +120,17 @@ player.collisionModel = new player.calcCollisionModel(map, player);
 
 
 // create UI
-// element, text, css, link, path
-let dragTiles = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false);
-let dragMultiple = new newUiItem("a", "", "button", "select-multiple", "#", "ico-select-multiple.svg", "ico-select-multiple-h.svg", false);
+// element, text, css class or id, link, path to icon, path to icon hoover,
+// true/false to adding boostrap's clases for colapse effect,
+// function to run on or after item is clicked
 
-let measurments = new newUiItem("a", "", "button", "measurments", "#devTools", "ico-measurments.svg", "ico-measurments-h.svg", true);
-let options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true);
+var selectTool = new newUiItem("a", "", "button", "select-multiple", "#", "ico-select-multiple.svg", "ico-select-multiple-h.svg", false, selectTiles
+    );
+
+var dragTiles = new newUiItem("a", "", "button", "select-tool", "#", "ico-select-tool.svg", "ico-select-tool-h.svg", false );
+
+var measurments = new newUiItem("a", "", "button", "measurments", "#devTools", "ico-measurments.svg", "ico-measurments-h.svg", true);
+var options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true);
 
 // UI event listeners
 document.querySelector("#ui-flatten-map").addEventListener("click", function() { map.flatAllTiles() });
@@ -134,7 +139,7 @@ document.querySelector("#ui-randomize-z").addEventListener("click", function() {
 
 // Keyboard controls
 // ===========================================================
-let keysDown = [];
+var keysDown = [];
 
 function pressKey(e) {
   keysDown[e.keyCode] = true;
@@ -152,22 +157,16 @@ document.addEventListener("keyup", releaseKey, false);
 // ===========================================================
 
 // Mouse collision polygon (1x)
-let mousePoly = new P(new V(-1, -1), [
+var mousePoly = new P(new V(-1, -1), [
   new V(1, 1),
   new V(1, 1),
   new V(1, 1),
   new V(1, 1)
 ]);
 
-// Mouse position related functions
-function updateMousePositionOnMap() {
-  mousePoly.pos.x = mouse.x + Math.abs( map.offsetTopLeft.x );
-  mousePoly.pos.y = mouse.y + Math.abs( map.offsetTopLeft.y );
-}
-
 // move grabbed tile verticaly
-function dragTileVerticaly() {
-  let ms = mouse.y - mouse.yLast;
+function dragTilesVerticaly() {
+  var ms = mouse.y - mouse.yLast;
   map.selectedTile.z += ms;  
 }
 
@@ -183,16 +182,8 @@ function mouseMove( e ) {
     mouse.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
 
-  updateMousePositionOnMap();
-
-  if( mouse.isDown ) { 
-    if( dragTiles.isItOnOrOff ) {
-      dragTileVerticaly()
-    }
-    if( dragMultiple.isItOnOrOff ) {
-      console.log("drag multiple");
-    }
-  };
+  mousePoly.pos.x = mouse.x + Math.abs( map.offsetTopLeft.x );
+  mousePoly.pos.y = mouse.y + Math.abs( map.offsetTopLeft.y );
 
   mouse.xLast = mouse.x;
   mouse.yLast = mouse.y;
@@ -201,21 +192,15 @@ function mouseMove( e ) {
 function mouseDown() { mouse.isDown = true; };
 function mouseUp() { mouse.isDown = false };
 
-document.onmousemove = mouseMove;
-document.onmouseup = mouseUp;
-document.onmousedown = mouseDown;
 
-
-
-
-
-
-
+document.addEventListener("mousemove", mouseMove);
+document.addEventListener("mouseup", mouseUp);
+document.addEventListener("mousedown", mouseDown);
 
 
 // The game main loop
 // ===========================================================
-let animate = function () {
+var animateGame = function () {
   // this allows for acurate canvas clean,
   // without it canvas would be cleaned based on it's offset position
   ctx1.setTransform(1, 0, 0, 1, 0, 0);
@@ -236,22 +221,22 @@ let animate = function () {
   
   
 
-  if(dragTiles.isItOnOrOff){fillSelectedTile(ctx1, map)}
+  if(selectTool.enabled){selectTool.action()}
 
   devTools(ctx1);
 
   // Request to do this again ASAP 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateGame);
 };
 
 // Start animation right after page is loaded
 // ===========================================================
 window.addEventListener("load", function() {
-  animate();
+  animateGame();
 
-  // Let there be UI!
+  // var there be UI!
   dragTiles.draw();
-  dragMultiple.draw();
+  selectTool.draw();
 
   measurments.draw();  
   options.draw();

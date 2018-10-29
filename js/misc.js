@@ -1,6 +1,3 @@
-var optionsSwitch = false,
-    selectTilesSwitch = false;
-
 // Custom message constructor
 function customMessage(ctx, message, x, y, xOffset, yOffset, fontSize, resetCanvasTransform) {
 	if(resetCanvasTransform) {ctx.setTransform(1, 0, 0, 1, 0, 0);}
@@ -35,75 +32,47 @@ function playerBase(ctx, color) {
 };
 
 
-// switcher function - takes variable as input and switches its ture/fals value
-function boleanSwitcher(variable){
-  variable = variable === true ? false : true;
-}
 
-
-
-
-boleanSwitcher(optionsSwitch);
-
-function optionsSwitcher(){
-  optionsSwitch = optionsSwitch === true ? false : true;
-}
-
-
-
-
-
-function selectTilesSwitcher(){
-  selectTilesSwitch = selectTilesSwitch === true ? false : true;
-}
-
-function fillSelectedTile( ctx, mapObject ) {
-  var m = mapObject;
+// function fillSelectedTile( ctx, mapObject ) {
+//   var m = mapObject;
   
-  var rP = Math.floor( ( mouse.y + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
-  var cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
+//   var rP = Math.floor( ( mouse.y + Math.abs( m.offsetTopLeft.y) ) / m.tileHeightHalf );
+//   var cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
 
-  var col;
+//   var col;
 
-  for( r = rP - 2; r < rP + 2; r++ ) {
-    if( r >= 0 && r < m.tiles.length ) {
+//   for( r = rP - 2; r < rP + 2; r++ ) {
+//     if( r >= 0 && r < m.tiles.length ) {
 
-      for( c = cP - 1; c < cP + 1; c++ ) {
-        if( c >= 0 && c < m.tiles[r].length ) {
+//       for( c = cP - 1; c < cP + 1; c++ ) {
+//         if( c >= 0 && c < m.tiles[r].length ) {
 
-          var re = new SAT.Response();
-          re.clear();          
+//           var re = new SAT.Response();
+//           re.clear();          
 
-          col = mousePoly.collidesWith(m.tiles[r][c].base, re);
+//           col = mousePoly.collidesWith(m.tiles[r][c].base, re);
 
-          if( col ) {
-            map.tiles[r][c].base.fill( ctx, "rgba(0, 110, 255, 0.3)" );
-            map.tiles[r][c].base.stroke( ctx, "rgb(0, 0, 255)" );
+//           if( col ) {
+//             map.tiles[r][c].base.fill( ctx, "rgba(0, 110, 255, 0.3)" );
+//             map.tiles[r][c].base.stroke( ctx, "rgb(0, 0, 255)" );
 
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            customMessage( ctx, "r: " + r, mouse.x, mouse.y, 40, -10, 20 );
-            customMessage( ctx, "c: " + c, mouse.x, mouse.y, 40, 10, 20 );
+//             ctx.setTransform(1, 0, 0, 1, 0, 0);
+//             customMessage( ctx, "r: " + r, mouse.x, mouse.y, 40, -10, 20 );
+//             customMessage( ctx, "c: " + c, mouse.x, mouse.y, 40, 10, 20 );
             
-            ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
+//             ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
-            if( !mouse.isDown ) { m.selectedTile = m.tiles[r][c]; };
+//             if( !mouse.isDown ) { m.selectedTile = m.tiles[r][c]; };
 
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            customMessage( ctx, "z: " + m.selectedTile.z, mouse.x, mouse.y, 40, 30, 20 );
-            ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
-          }
-        }  
-      }
-    }
-  }
-}
-
-
-var devToolsSwitch = false;
-
-function devToolsSwitcher(){
-  devToolsSwitch = devToolsSwitch === true ? false : true;
-}
+//             ctx.setTransform(1, 0, 0, 1, 0, 0);
+//             customMessage( ctx, "z: " + m.selectedTile.z, mouse.x, mouse.y, 40, 30, 20 );
+//             ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
+//           }
+//         }  
+//       }
+//     }
+//   }
+// }
 
 function devTools( ctx ) {  
   if( document.querySelector(".checkTileGrid").checked ) { map.strokeAllTilesBase( ctx, "rgba(0, 0, 255, 0.2)" ) }; 
