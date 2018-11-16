@@ -51,8 +51,9 @@ function createCharacter(playerSpeedInPx){
   this.speed = playerSpeedInPx;
   this.weight = 4; // draws the line for how fast object can be falling
   this.isInTheAir = false;
+  this.isJumping = false;
+  this.jumpDistance = 2;
   this.jumpHeight = 6;
-  this.jumpDistance = 3;
   this.jumpDelay = 15;
   this.jumpDelayCounter = 0;
   this.xV = 0; // horizontal velocity
@@ -63,7 +64,7 @@ function createCharacter(playerSpeedInPx){
   this.lastTileStoodOn = {};
 
   // on how much higher tile player can step without jumping (in px)
-  this.maxStepWithoutJump = 10;
+  this.maxStepWithoutJump = 15;
   this.lastLog = "";
   this.lastTileLogged = {};
 };
@@ -459,32 +460,37 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                     // counter movment if collision detected
                     if( t.z < p.z ) {
 
-                      p.collisionDetected = true;
+                      if ( t.z > p.z - p.maxStepWithoutJump ) {
+                        if ( p.xV !== 0 || p.yV !== 0 ) {
+                          p.z -= 10;
+                        }
+                      }
+                      else {
+                        p.collisionDetected = true;
 
-                      p.log("c");
+                        // p.log("c");
+                        var model = p.collisionModel;
+                        var rex = Math.round(response.overlapV.x);
+                        var rey = Math.round(response.overlapV.y);
 
-                      var model = p.collisionModel;
-                      var rex = Math.round(response.overlapV.x);
-                      var rey = Math.round(response.overlapV.y);
+                        // player position
+                        p.x -= rex;
+                        p.y -= rey;
 
-                      // player position
-                      p.x -= rex;
-                      p.y -= rey;
+                        // player's collision box position
+                        model.base.poly.pos.x -= rex;
+                        model.base.poly.pos.y -= rey;
 
-                      // player's collision box position
-                      model.base.poly.pos.x -= rex;
-                      model.base.poly.pos.y -= rey;
+                        // player's collision point position
+                        model.base.point.pos.x -= rex;
+                        model.base.point.pos.y -= rey;
 
-                      // player's collision point position
-                      model.base.point.pos.x -= rex;
-                      model.base.point.pos.y -= rey;
-
-                      // player's collision area position
-                      model.area.points.topLeft.x -= rex;
-                      model.area.points.topLeft.y -= rey;
-                      model.area.points.bottomRight.x -= rex;
-                      model.area.points.bottomRight.y -= rey;
-
+                        // player's collision area position
+                        model.area.points.topLeft.x -= rex;
+                        model.area.points.topLeft.y -= rey;
+                        model.area.points.bottomRight.x -= rex;
+                        model.area.points.bottomRight.y -= rey;
+                      }
                     }
                     else {
                       p.collisionDetected = false;
@@ -519,6 +525,7 @@ createCharacter.prototype.move = function(m, p) {
       p.zV = 0;
     }
     p.isInTheAir = false;
+    p.isJumping = false;
     p.jumpDelayCounter = p.jumpDelayCounter - 1 >= 0 ? p.jumpDelayCounter - 1 : 0;
   }
 
@@ -526,6 +533,7 @@ createCharacter.prototype.move = function(m, p) {
   if ( 32 in keysDown && !p.isInTheAir && p.jumpDelayCounter === 0 && p.zV === 0 ) {
     p.zV = -p.jumpHeight;
     p.jumpDelayCounter = p.jumpDelay;
+    p.isJumping = true;
     // p.log("j");
   }
 
@@ -533,10 +541,9 @@ createCharacter.prototype.move = function(m, p) {
   if ( 37 in keysDown  ){
     // Move player if he's in the range of map
     if(p.x > (m.clipByTiles * m.tileWidth) + p.xV + (p.spriteWidth / 2) && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth)) {
-
       // Move player
       p.xV -= p.speed;
-      // p.xV = !p.isInTheAir ? p.xV - p.speed : p.xV - p.jumpDistance;
+      if ( p.isJumping ) { p.xV -= p.jumpDistance }
     }
   }
 
@@ -544,10 +551,9 @@ createCharacter.prototype.move = function(m, p) {
   if ( 39 in keysDown ) {
     // Move player if he's in the range of map
     if(p.x > (m.clipByTiles * m.tileWidth) +  p.xV && p.x < m.mapWidth - (m.clipByTiles * m.tileWidth) - (p.spriteWidth / 2)) {
-
       // Move player
       p.xV += p.speed;
-      // p.xV = !p.isInTheAir ? p.xV + p.speed : p.xV + p.jumpDistance;
+      if ( p.isJumping ) { p.xV += p.jumpDistance }
     }
   }
 
@@ -555,21 +561,19 @@ createCharacter.prototype.move = function(m, p) {
   if ( 38 in keysDown ) {
     // Move player if he's in the range of map
     if(p.y > (m.clipByTiles * m.tileHeight) + p.yV + p.spriteHeight + p.spriteHeight && p.y < m.mapHeight - (m.clipByTiles * m.tileWidth)) {
-
       // Move player
       p.yV -= p.speed;
-      // p.yV = !p.isInTheAir ? p.yV - p.speed : p.yV - p.jumpDistance;
+      if ( p.isJumping ) { p.yV -= p.jumpDistance }
     }
   }
 
   // Player holding key down
   // Move player if he's in the range of map
-  if ( 40 in keysDown &&
-   p.y > m.clipByTiles * m.tileHeight + p.yV &&
-   p.y < m.mapHeight - (m.clipByTiles * m.tileWidth) - 4) {
-
+  if ( 40 in keysDown && p.y > m.clipByTiles * m.tileHeight + p.yV && p.y < m.mapHeight - (m.clipByTiles * m.tileWidth) - 4) {
+    // Move player
     p.yV += p.speed;
-    // p.yV = !p.isInTheAir ? p.yV + p.speed : p.yV + p.jumpDistance;
+    if ( p.isJumping ) { p.yV += p.jumpDistance }
+
   }
 
 
@@ -588,7 +592,7 @@ createCharacter.prototype.move = function(m, p) {
   p.y += p.yV;
   p.x += p.xV;
 
-  // p.log("g");
+  p.log("g");
   // if ( p.lastTileLogged !== l ) { console.log(l.r + " " + l.c); };
   
   // p.upZ(m, p);
