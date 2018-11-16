@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Soletaken</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="css/stylesheets/screen.css">
+
+  </head>
+
+  <body>
+    <!-- <div id="cover"></div> -->
+    <div class="container-fluid ui">
+      <div class="row">
+
+        <div class="col" id="left-sidebar">
+          <div id="devTools" class="collapse">
+            <div class="card card-body">
+              <ul>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" id="middle">
+
+        </div>
+
+        <div class="col" id="right-sidebar">
+          <div id="optionsBox" class="collapse">
+            <div class="card card-body">
+              <h6>Draw:</h6>
+              <form>
+                <label for="name">Tiles grid</label>
+                <input class="checkTileGrid" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Camrea (canvas) center</label>
+                <input class="checkCanvasCenter" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player collision area</label>
+                <input class="checkCollisionArea" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player position</label>
+                <input class="checkPlayerPosition" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player collision base polygon</label>
+                <input class="checkPlayerBase" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Player collision 1px point</label>
+                <input class="checkPlayerPoint" type="checkbox" value="0">
+
+                <label for="name">Draw all map tiles bases</label>
+                <input class="checkMapBaseDraw" type="checkbox" value="0">
+              </form>
+              <h6>Miscellaneous</h6>
+              <a href="#" id="ui-flatten-map">Flatten the entire map</a>
+              <a href="#" id="ui-randomize-z">Randomize tiles "z" position</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="vignette"></div>
+
+    <script type="text/javascript" src="js/lib/jQuery3-2-1.js"></script>
+    <script type="text/javascript" src="js/lib/popper.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap4.js"></script>
+    <script type="text/javascript" src="js/lib/sat.js"></script>
+
+    <!-- Game JS's -->             
+    <script type="text/javascript" src="js/mapGenerator.js"       ></script>
+    <script type="text/javascript" src="js/mapGenerateTiles.js"   ></script>
+    <script type="text/javascript" src="js/mapRender.js"          ></script>
+    <script type="text/javascript" src="js/spriteGenerator.js"    ></script>
+    <script type="text/javascript" src="js/characterGenerator.js" ></script>
+    <script type="text/javascript" src="js/misc.js"               ></script>
+    <script type="text/javascript" src="js/UI.js"                 ></script>
+    <script type="text/javascript" src="js/main.js"               ></script>
+    <script type="text/javascript" src="js/UI-devTools.js"        ></script>
+  </body>
+</html>
