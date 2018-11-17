@@ -67,6 +67,49 @@ function createCharacter(playerSpeedInPx){
   this.maxStepWithoutJump = 15;
   this.lastLog = "";
   this.lastTileLogged = {};
+  this.log = {
+    that: this,
+    position: false,
+    collision: false,
+    switch: function (i) {
+      i = i === true ? false : true;
+      return i;
+    },
+    properties: function(messageLable) {
+      var p = this.that,
+          t = p.lastTileStoodOn,
+          ms = messageLable || "",
+    //       whatToLog = `${ms}
+    // x: ${p.x}
+    // y: ${p.y}
+    // z: ${p.z}
+    // xV: ${p.xV}
+    // yV: ${p.yV}
+    // zV: ${p.zV}
+    // tile.z: ${t.z}
+    // tile: ${t.r} ${t.c}
+    // falling: ${p.isInTheAir}
+    // col: ${p.collisionDetected}
+    // `;
+            whatToLog = 
+            ms +
+            " | xV: " + p.xV +
+            " x: " + p.x +
+            " | yV: " + p.yV +
+            " y: " + p.y +
+            " | z.V: " + p.zV +
+            " z: " + p.z +
+            " | tile.z: " + t.z +
+            " tile: " + t.r + ", " + t.c +
+            " | falling: " + p.isInTheAir +
+            " | col: " + p.collisionDetected;
+
+      if ( !this.lastLog || whatToLog !== this.lastLog ) {
+        console.log(whatToLog);
+      }
+      this.lastLog = whatToLog;
+    }
+  }
 };
 
 // Methods
@@ -175,41 +218,6 @@ createCharacter.prototype.whichTileIsStandingOn = function() {
 }
 
 // log shit & stuff about character's object
-createCharacter.prototype.log = function(messageLable) {
-
-  var p = this,
-      t = p.lastTileStoodOn,
-      ms = messageLable || "",
-//       whatToLog = `${ms}
-// x: ${p.x}
-// y: ${p.y}
-// z: ${p.z}
-// xV: ${p.xV}
-// yV: ${p.yV}
-// zV: ${p.zV}
-// tile.z: ${t.z}
-// tile: ${t.r} ${t.c}
-// falling: ${p.isInTheAir}
-// col: ${p.collisionDetected}
-// `;
-        whatToLog = 
-        ms +
-        " | xV: " + p.xV +
-        " x: " + p.x +
-        " | yV: " + p.yV +
-        " y: " + p.y +
-        " | z.V: " + p.zV +
-        " z: " + p.z +
-        " | tile.z: " + t.z +
-        " tile: " + t.r + ", " + t.c +
-        " | falling: " + p.isInTheAir +
-        " | col: " + p.collisionDetected;
-
-  if ( !this.lastLog || whatToLog !== this.lastLog ) {
-    console.log(whatToLog);
-  }
-  this.lastLog = whatToLog;
-}
 
 // Update player's collision box and area per axis
 createCharacter.prototype.upX = function(m, p) {
@@ -468,7 +476,8 @@ createCharacter.prototype.calcCollisionModel = function(mapObject, playerObject)
                       else {
                         p.collisionDetected = true;
 
-                        // p.log("c");
+                        if ( p.log.collision ) { p.log.properties("c") }
+
                         var model = p.collisionModel;
                         var rex = Math.round(response.overlapV.x);
                         var rey = Math.round(response.overlapV.y);
@@ -511,7 +520,6 @@ createCharacter.prototype.move = function(m, p) {
   // current tile
   var l = p.lastTileStoodOn;
   p.lastTileStoodOn = p.whichTileIsStandingOn();
-  if ( p.lastTileLogged !== l ) { console.log(l.r + " " + l.c); };
   
   p.xV = 0;
   p.yV = 0;
@@ -534,7 +542,7 @@ createCharacter.prototype.move = function(m, p) {
     p.zV = -p.jumpHeight;
     p.jumpDelayCounter = p.jumpDelay;
     p.isJumping = true;
-    // p.log("j");
+    if ( p.log.position ) { p.log.properties("j") }
   }
 
   // Player holding left key
@@ -592,8 +600,7 @@ createCharacter.prototype.move = function(m, p) {
   p.y += p.yV;
   p.x += p.xV;
 
-  p.log("g");
-  // if ( p.lastTileLogged !== l ) { console.log(l.r + " " + l.c); };
+  if ( p.log.position ) { p.log.properties("g") }
   
   // p.upZ(m, p);
   p.upY(m, p);

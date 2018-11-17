@@ -35,8 +35,16 @@
             <div class="card card-body">
               <h6>Draw:</h6>
               <form>
+                <!-- <label for="name">Tiles & Player</label>
+                <input class="drawTiles" type="checkbox" value="0">
+                <br /> -->
+
                 <label for="name">Tiles grid</label>
                 <input class="checkTileGrid" type="checkbox" value="0">
+                <br />
+
+                <label for="name">Tiles collision bases</label>
+                <input class="checkMapBaseDraw" type="checkbox" value="0">
                 <br />
 
                 <label for="name">Camrea (canvas) center</label>
@@ -56,15 +64,22 @@
                 <br />
 
                 <label for="name">Player collision 1px point</label>
-                <input class="checkPlayerPoint" type="checkbox" value="0">
-
-                <label for="name">Draw all map tiles bases</label>
-                <input class="checkMapBaseDraw" type="checkbox" value="0">
+                <input class="checkPlayerPoint" type="checkbox" value="0">                
               </form>
+
               <h6>Miscellaneous</h6>
-              <a href="#" id="ui-flatten-map">Flatten the entire map</a>
-              <a href="#" id="ui-randomize-z">Randomize tiles "z" position</a>
-            </div>
+              <a href="#" class="ui-flatten-map">Flatten the entire map</a>
+              <a href="#" class="ui-randomize-z">Randomize tiles "z" position</a>
+
+              <h6>Log</h6>
+              <form>
+                <label for="name">Log player's position</label>
+                <input class="ui-log-player-position" type="checkbox" value="0">
+
+                <label for="name">Log player's collisions</label>
+                <input class="ui-log-player-collision" type="checkbox" value="0">
+              </form>
+              </div>
           </div>
         </div>
 

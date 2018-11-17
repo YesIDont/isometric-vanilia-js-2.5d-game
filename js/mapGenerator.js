@@ -81,6 +81,7 @@ function generateMap (
   };
   this.selectedTile = [];
   this.tragicEnding = false;
+  this.renderSwitch = true;
 
   // Tiles on 0 level generaotr - layer 0
   

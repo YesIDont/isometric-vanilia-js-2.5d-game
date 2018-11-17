@@ -24,24 +24,26 @@ generateMap.prototype.render = function(playerObject){
       left = m.tilesOutsideCanvas.left - 3,
       right = m.xTilesNumber - m.tilesOutsideCanvas.right + 3;
 
-  // render tiles under player's sprite
-  for( r = top; r < bottom + 3; r++ ) {
-    if( r >= 0 && r < m.tiles.length ) {
+  if ( map.renderSwitch ) {
+    // render tiles under player's sprite
+    for( r = top; r < bottom + 3; r++ ) {
+      if( r >= 0 && r < m.tiles.length ) {
 
-      if( m.tiles[r][0].y <= p.y || ( p.y >= m.tiles[r][0].y && p.y <= m.tiles[r][0].y + m.tileHeightHalf ) ) {
+        if( m.tiles[r][0].y <= p.y || ( p.y >= m.tiles[r][0].y && p.y <= m.tiles[r][0].y + m.tileHeightHalf ) ) {
 
 
-        for( c = left - 3; c < right + 3; c++ ) {
-          if( c >= 0 && c < m.tiles[r].length &&
-              m.tiles[r][c].y + m.tiles[r][c].z > o - m.tileHeight &&
-              m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + m.tileHeight ) {           
+          for( c = left - 3; c < right + 3; c++ ) {
+            if( c >= 0 && c < m.tiles[r].length &&
+                m.tiles[r][c].y + m.tiles[r][c].z > o - m.tileHeight &&
+                m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + m.tileHeight ) {           
 
-            ctx1.drawImage (
-              m.tiles[r][c].type,
-              m.tiles[r][c].xAbsolute,
-              m.tiles[r][c].yAbsolute + m.tiles[r][c].z
-            )
-          }          
+              ctx1.drawImage (
+                m.tiles[r][c].type,
+                m.tiles[r][c].xAbsolute,
+                m.tiles[r][c].yAbsolute + m.tiles[r][c].z
+              )
+            }          
+          }
         }
       }
     }
@@ -49,26 +51,29 @@ generateMap.prototype.render = function(playerObject){
 
   player.animate(ctx1);
 
-  // render tiles above player's sprite
-  for( r = top; r < bottom + 3; r++ ) {
-    if( r >= 0 && r < m.tiles.length ) {
+  if ( map.renderSwitch ) {
+    // render tiles above player's sprite
+    for( r = top; r < bottom + 3; r++ ) {
+      if( r >= 0 && r < m.tiles.length ) {
 
-     for( c = left - 3; c < right + 3; c++ ) {
-        if( c >= 0 && c < m.tiles[r].length /*&&
-            m.tiles[r][c].y + m.tiles[r][c].z > o - 3 &&
-            m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + 3*/ ) { 
+       for( c = left - 3; c < right + 3; c++ ) {
+          if( c >= 0 && c < m.tiles[r].length /*&&
+              m.tiles[r][c].y + m.tiles[r][c].z > o - 3 &&
+              m.tiles[r][c].y + m.tiles[r][c].z < o + canvasHeight + 3*/ ) { 
 
-          if( m.tiles[r][c].z < p.z && r === Math.floor( p.y / m.tileHeightHalf ) || r > Math.floor( p.y / m.tileHeightHalf ) ) {
-            ctx1.drawImage (
-              m.tiles[r][c].type,
-              m.tiles[r][c].xAbsolute,
-              m.tiles[r][c].yAbsolute + m.tiles[r][c].z
-            )
-          }
-        }          
+            if( m.tiles[r][c].z < p.z && r === Math.floor( p.y / m.tileHeightHalf ) || r > Math.floor( p.y / m.tileHeightHalf ) ) {
+              ctx1.drawImage (
+                m.tiles[r][c].type,
+                m.tiles[r][c].xAbsolute,
+                m.tiles[r][c].yAbsolute + m.tiles[r][c].z
+              )
+            }
+          }          
+        }
       }
-    }
+    }    
   }
+
 
 
 

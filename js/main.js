@@ -133,8 +133,23 @@ player.collisionModel = new player.calcCollisionModel(map, player);
   var options = new newUiItem("a", "", "button", "options", "#optionsBox", "ico-options.svg", "ico-options-h.svg", true, false);
 
   // UI event listeners
-  document.querySelector("#ui-flatten-map").addEventListener("click", function() { map.flatAllTiles() });
-  document.querySelector("#ui-randomize-z").addEventListener("click", function() { map.randomizeTerrain() });
+  function devTools( ctx ) {  
+    if( document.querySelector(".checkTileGrid").checked ) { map.strokeAllTilesBase( ctx, "rgba(0, 0, 255, 0.2)" ) }; 
+    if( document.querySelector(".checkCollisionArea").checked ) { player.collisionModel.drawArea(map, player, ctx ) };
+    if( document.querySelector(".checkPlayerPosition").checked ) { player.showPosition( ctx, map, "#0000ff") ; };
+    if( document.querySelector(".checkCanvasCenter").checked ) { drawCanvasCenter( "#ff0000", ctx ); };
+    if( document.querySelector(".checkPlayerBase").checked ) { playerBase( ctx, "rgba(255, 0, 0, 0.4)" ); };
+    if( document.querySelector(".checkPlayerPoint").checked ) { player.collisionModel.base.point.fill( ctx, "rgb(255, 0, 0)" ); };
+    if( document.querySelector(".checkMapBaseDraw").checked ) { map.strokeAllTilesBase( ctx, "rgba(255, 0, 0, 0.4)")};
+    // if( document.querySelector(".ui-log-player-position").checked ) { player.log.position() };
+    // if( document.querySelector(".ui-log-player-collision").checked ) { player.log.collision() };
+    // if( document.querySelector(".drawTiles").checked ) { map.render(player) };
+    
+    updateDevToolsInfo();
+  };
+
+  document.querySelector(".ui-flatten-map").addEventListener("click", function() { map.flatAllTiles() });
+  document.querySelector(".ui-randomize-z").addEventListener("click", function() { map.randomizeTerrain() });
 
 // Keyboard controls
 // ===========================================================
