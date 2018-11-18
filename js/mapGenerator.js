@@ -118,8 +118,8 @@ function generateMap (
   // this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
-  this.makeHoles();
-  this.makeBumps();
+  // this.makeHoles();
+  // this.makeBumps();
   
   // this.makeHighBump();
   // this.makeWall();
@@ -145,17 +145,17 @@ function generateMap (
 generateMap.prototype.startInHell = function() {
   this.tragicEnding = true;
   var that = this;
-  // // all tiles into cobblestone
-  // for(r = 0; r < that.tiles.length; r++) {
-  //   for(c = 0; c < that.tiles[r].length; c++) {
-  //       that.tiles[r][c].type = cobblestone;
-  //   }
-  // }
+  // all tiles into cobblestone
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
+        that.tiles[r][c].type = cobblestone;
+    }
+  }
   // create stone stage in center of the map
   var rn = this.tiles.length / 2;
   var cn = this.tiles[rn].length /2;
-  for(r = -5; r < 5; r++) {
-    for(c = -4; c < 4; c++) {
+  for(r = -7; r < 7; r++) {
+    for(c = -5; c < 5; c++) {
       this.tiles[rn + r][cn + c].z = -((Math.floor( (Math.random() * 10) )) + 5);
     }
   }
@@ -169,22 +169,22 @@ generateMap.prototype.startInHell = function() {
       this.tiles[rn + r][cn + c].z = -50;
     }
   }
-  // // randomly pull up tiles and turn them to stone  
-  // if(typeof this.randomTile !== undefined) {
-  //     for(i = 0; i < 1000; i++) {
-  //       let rnd = that.randomTile();
-  //       rnd.z -= Math.floor( (Math.random() * 15) );
-  //       rnd.type = cobblestone//that.randomType();
-  //     }      
-  // }
-  // // turn all tiles that have z = 0 to lava
-  // for(r = 0; r < that.tiles.length; r++) {
-  //   for(c = 0; c < that.tiles[r].length; c++) {
-  //      if ( that.tiles[r][c].z >= 0 ) {
-  //       that.tiles[r][c].type = lava;
-  //      }
-  //   }
-  // }
+  // randomly pull up tiles and turn them to stone  
+  if(typeof this.randomTile !== undefined) {
+      for(i = 0; i < 4500; i++) {
+        let rnd = that.randomTile();
+        rnd.z -= Math.floor( (Math.random() * 15) );
+        rnd.type = cobblestone//that.randomType();
+      }      
+  }
+  // turn all tiles that have z = 0 to lava
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
+       if ( that.tiles[r][c].z >= 0 ) {
+        that.tiles[r][c].type = lava;
+       }
+    }
+  }
    
 }
 
