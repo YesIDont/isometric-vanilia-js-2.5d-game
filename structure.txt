@@ -1,0 +1,105 @@
+Future structure
+-----------------------------------
+game
+  //properties
+  data
+    input
+      mouse
+        position
+          current
+            x, y
+          last
+            x, y
+        buttons
+          left
+            pressed t/f
+          right
+            pressed t/f
+      keys
+        pressed
+    objects
+      map
+        template
+          properties
+          methods
+        current (loaded map)
+        saved
+          saved maps
+          ...
+      creatures
+        player
+        npc's
+        monsters
+      static
+        terrain
+        vegetation
+        structures
+    settings
+      gameplay
+        key bindings
+          move
+            left
+            right
+            up
+            down
+            jump
+          interact
+        graphic
+          on/off elements
+        sound
+          on/off music/sounds/...
+          volume
+      rendering
+    UI
+      html
+        gameplay
+          devtools
+            position
+            states
+        window / as a basic component used to contain all UI other than gamplay UI, menus etc.
+          main menu
+            start
+            load
+            save
+            options
+          in game menu
+      css
+
+  // methods - this is only list of methods, each should be part of corresponding object
+  engine
+    generate map
+    collisions
+    render
+      requestAnimationFrame
+      graphic
+      sound
+      GUI
+    AI
+    start
+      load content
+        graphics
+        sound
+      set structure
+        layer
+          canvas
+          context
+          append to html
+          add event listener for window resize
+      generate objects / map (terrain, vegetation, structures), player, npc's, monsters
+      initiate
+        input
+          mouse
+            create poly for collisions with game objects
+          keyboard
+      render
+      load/append UI
+    end
+      conditions for different game endings
+  input
+    mouse
+      update
+        current x,y
+        last x,y
+    keyboard
+      update
+        keys pressed

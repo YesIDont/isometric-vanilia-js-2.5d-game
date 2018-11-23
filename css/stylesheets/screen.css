@@ -114,15 +114,9 @@ canvas {
 .ui #right-sidebar #optionsBox form {
   line-height: 20px;
 }
-.ui #middle,
-.ui #middle > div,
-.ui #middle > div > div,
 .ui #right-sidebar {
   background: transparent;
   border: none;
-}
-.ui #middle {
-  text-align: center;
 }
 .ui #left-sidebar div {
   max-width: 260px;

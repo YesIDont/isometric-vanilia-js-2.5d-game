@@ -1,5 +1,5 @@
 generateMap.prototype.createLayer = function() {
-  let that = this;
+  var that = this;
   that.tiles = [];
   for (r = 0; r < that.yTilesNumber; r++) {
     that.tiles[r] = [r];
@@ -25,29 +25,29 @@ generateMap.prototype.createLayer = function() {
 };
 
 generateMap.prototype.calculateTile_x = function( r, c ) {
-  let that = this;
+  var that = this;
   if( r === 0 || r % 2 === 0 ) {
-    let tileX = c * that.tileWidth;
+    var tileX = c * that.tileWidth;
     return tileX;
   } else {
-    let tileX = c * that.tileWidth + that.tileWidthHalf;
+    var tileX = c * that.tileWidth + that.tileWidthHalf;
     return tileX;
   }
 };
 generateMap.prototype.calculateTile_y = function( r, c ) {
-  let that = this;
+  var that = this;
   if( r === 0 || r % 2 === 0 ) {
-    let tileY = r * that.tileHeightHalf;
+    var tileY = r * that.tileHeightHalf;
     return tileY;
 
   } else {
-    let tileY = r * that.tileHeightHalf;
+    var tileY = r * that.tileHeightHalf;
     return tileY;
   }
 };
 generateMap.prototype.imgType = function() {
-  let that = this;
-  let sprite = Math.floor((Math.random() * 3) + 1);
+  var that = this;
+  var sprite = Math.floor((Math.random() * 3) + 1);
 
   switch( sprite ) {
     case 1: return grass; break;

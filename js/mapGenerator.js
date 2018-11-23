@@ -15,11 +15,11 @@ white.src = "img/map/white_77x100px_block1.png";
 
 function generateMap (
     // input
-    xTilesNumber, 
-    yTilesNumber, 
-    tileWidth, 
+    xTilesNumber,
+    yTilesNumber,
+    tileWidth,
     tileHeight,
-    /*  
+    /*
         Starting position is used to calculate map offset in relation to canvas.
         Can be intergers in range of map width and height, and if typed outside thiese ranges -
         default position will be set, which is top left corner of the map in the top left corner of the canvas.
@@ -27,7 +27,7 @@ function generateMap (
 
         For now it can take only center, center.
     */
-    mapStartPosition_x,  
+    mapStartPosition_x,
     mapStartPosition_y,
     clipByTiles
     ) {
@@ -52,7 +52,7 @@ function generateMap (
   this.clipByTiles = clipByTiles || 0; // it tels animating function how many tiles must be clipped out of movment area
   // this.xStartOffset = Math.floor((this.mapWidth * 0.5)) - canvasWidthHalf; // on start centers map horizontaly
   // this.yStartOffset = Math.floor((this.mapHeight * 0.5)) - canvasHeightHalf; // on start centers map verticaly
-   
+
   /*
       Below offset of coordinates and numbers of tiles in each direction
       is used to narrow loop across array of all tiles when drawing them on screen.
@@ -84,11 +84,11 @@ function generateMap (
   this.renderSwitch = true;
 
   // Tiles on 0 level generaotr - layer 0
-  
+
   // fill the above array with data on each tile
   this.createLayer();
   this.calculateTilesBase();
-  
+
   this.strokeAllTilesBase = function( ctx, color ) {
     ctx.save();
     ctx.strokeStyle = color;
@@ -108,19 +108,19 @@ function generateMap (
     var t = that.tiles[r][c];
     t.base.fill(context, color, t.z);
   };
-  
+
 
   this.randomTile = function(){
     let c = Math.floor( (Math.random() * that.yTilesNumber) );
-    let r = Math.floor( (Math.random() * that.xTilesNumber) );    
+    let r = Math.floor( (Math.random() * that.xTilesNumber) );
     return that.tiles[c][r]
-  };  
+  };
   // this.randomizeTerrain();
   // this.fallFromLeft();
   // this.fallFromTop();
   // this.makeHoles();
   // this.makeBumps();
-  
+
   // this.makeHighBump();
   // this.makeWall();
 
@@ -132,7 +132,7 @@ function generateMap (
   // this.moveOneTile(35, 19, -20);
 
   this.startInHell();
-  
+
   // this.whites();
 
   this.findMaxAndMinZ();
@@ -169,13 +169,13 @@ generateMap.prototype.startInHell = function() {
       this.tiles[rn + r][cn + c].z = -50;
     }
   }
-  // randomly pull up tiles and turn them to stone  
+  // randomly pull up tiles and turn them to stone
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < 4500; i++) {
         let rnd = that.randomTile();
         rnd.z -= Math.floor( (Math.random() * 15) );
         rnd.type = cobblestone//that.randomType();
-      }      
+      }
   }
   // turn all tiles that have z = 0 to lava
   for(r = 0; r < that.tiles.length; r++) {
@@ -185,7 +185,6 @@ generateMap.prototype.startInHell = function() {
        }
     }
   }
-   
 }
 
 generateMap.prototype.whites = function() {
@@ -215,13 +214,13 @@ generateMap.prototype.whites = function() {
       this.tiles[rn + r][cn + c].z = -50;
     }
   }
-  // randomly pull up tiles and turn them to stone  
+  // randomly pull up tiles and turn them to stone
   if(typeof this.randomTile !== undefined) {
       for(i = 0; i < 1000; i++) {
         let rnd = that.randomTile();
         rnd.z -= Math.floor( (Math.random() * 15) );
-      }      
-  }   
+      }
+  }
 }
 
 generateMap.prototype.randomType = function() {
@@ -287,8 +286,8 @@ generateMap.prototype.makeBumps = function() {
       for(i = 0; i < 1000; i++) {
         let rnd = that.randomTile();
         rnd.z -= Math.floor( (Math.random() * 15) );
-      }      
-  }   
+      }
+  }
 };
 generateMap.prototype.flatAllTiles = function() {
   let that = this;
@@ -333,7 +332,7 @@ generateMap.prototype.makeWall = function() {
             that.tiles[r - 1][c + i].z -= 64;
             r -= 1;
           }
-          
+
         };
         break;
       case 1:
@@ -355,10 +354,8 @@ generateMap.prototype.makeWall = function() {
         // code
         break;
       case 7:
-        // code         
+        // code
     }
-
-    
   };
 
 // writeTilesBase creates for each tile vector base which will be used
@@ -410,7 +407,7 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
     );
 
   };
-  
+
 
   that.updateTilesOutside();
 
@@ -418,7 +415,7 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
   ctx1.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
   // ctx2.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
   // ctx3.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
-  
+
   console.log(player. x + " " + player.y + " " + player.z )
 };
 
@@ -449,19 +446,19 @@ generateMap.prototype.cameraUpdate = function ( m, x, y, z ) {
     m.offsetTopLeft.x =  -(x - canvasWidthHalf);
   }
 
-  // update top left y offset 
+  // update top left y offset
   if( -(y - canvasHeightHalf) < -(m.clipByTiles * m.tileWidth) /*- m.zMax*/ &&
       -(y - canvasHeightHalf) > -(m.mapHeight - canvasHeight) + (m.clipByTiles * m.tileWidth) /*- m.zMin*/  ) {
 
       m.offsetTopLeft.y = -(y /*+ z*/ - canvasHeightHalf);
-  }    
+  }
 
   // update bottom right x offset
   if( m.mapWidth - x - canvasWidthHalf > m.clipByTiles * m.tileWidth &&
       m.mapWidth - x - canvasWidthHalf < m.mapWidth - canvasWidth - (m.clipByTiles * m.tileWidth)) {
 
       m.offsetBottomRight.x = m.mapWidth - x - canvasWidthHalf;
-  }  
+  }
 
   // update bottom right y offset
   if( m.mapHeight - y - canvasHeightHalf > m.clipByTiles * m.tileWidth /*+ m.zMax*/  &&
