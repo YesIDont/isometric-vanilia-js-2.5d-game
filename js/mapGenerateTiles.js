@@ -18,7 +18,7 @@ generateMap.prototype.createLayer = function() {
         canWalkOnIt: true,
         playerStandsOnIt: false,
         // randomly chooses one of four tile types and if Island map type is enabled - makes edge of map water
-        type: white // that.imgType()
+        type: that.imgType()
       };
     };
   };
@@ -51,8 +51,8 @@ generateMap.prototype.imgType = function() {
 
   switch( sprite ) {
     case 1: return grass; break;
-    case 2: return dirt;  break;
-    case 3: return mud;   break;
+    case 2: return grasslight;  break;
+    case 3: return grassdark;   break;
     // case 4: return cobblestone;
   }
 }

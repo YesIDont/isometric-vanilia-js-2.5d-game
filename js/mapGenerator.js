@@ -1,19 +1,23 @@
 // links of images used for tiles
-let grass = new Image(),
-    dirt = new Image(),
-    mud = new Image(),
-    cobblestone = new Image(),
-    lava = new Image(),
-    blackdirt = new Image(),
-    white = new Image();
+let grass         = new Image(),
+    grasslight    = new Image(),
+    grassdark     = new Image(),
+    dirtblack     = new Image(),
+    dirtblacklong = new Image(),    
+    cobblestone   = new Image(),
+    lava          = new Image(),    
+    white         = new Image(),
 
-grass.src = "img/map/grass_77x100px_block1.png",
-dirt.src = "img/map/grass_77x100px_block2.png",
-mud.src = "img/map/grass_77x100px_block3.png",
-cobblestone.src = "img/map/grass_77x100px_block4.png",
-lava.src = "img/map/lava_77x100px_block1.png",
-blackdirt.src = "img/map/blackdirt.png",
-white.src = "img/map/white_77x100px_block1.png";
+    tilePath = "img/map/tiles/";
+
+grass.src         = tilePath + "grass.png",
+grasslight.src    = tilePath + "grass_light.png",
+grassdark.src     = tilePath + "grass_dark.png",
+dirtblack.src     = tilePath + "dirt_black.png",
+dirtblacklong.src = tilePath + "dirt_black_long.png",
+cobblestone.src   = tilePath + "cobblestone.png",
+lava.src          = tilePath + "lava.png",
+white.src         = tilePath + "white.png";
 
 function generateMap (
     // input
@@ -136,7 +140,9 @@ function generateMap (
   // this.startInHell();
 
   // this.whites();
-  this.cave();
+
+  // this.cave();
+
   this.findMaxAndMinZ();
 };
 
@@ -150,27 +156,34 @@ generateMap.prototype.cave = function() {
   // turn all tiles to black dirt
   for(r = 0; r < that.tiles.length; r++) {
     for(c = 0; c < that.tiles[r].length; c++) {
-        that.tiles[r][c].type = blackdirt;
+        that.tiles[r][c].type = dirtblacklong;
     }
   }
   // create stone stage in center of the map
   var rn = this.tiles.length / 2;
   var cn = this.tiles[rn].length / 2;
+
   for(r = -6; r < 6; r++) {
-    for(c = -4; c < 4; c++) {
-      that.tiles[rn + r][cn + c].type = cobblestone;
-      that.tiles[rn + r][cn + c].z = 60;
+    for(c = -3; c < 3; c++) {
+
+      var t = that.tiles[rn + r][cn + c];
+
+      t.type = cobblestone;
+      t.z = 90;
     }
   }
   // randomly widen the cave on the edges
-  for(r = -10; r < 10; r++) {
-    for(c = -7; c < 7; c++) {
-      if ( random() ) {
-        that.tiles[rn + r][cn + c].type = cobblestone;
-        that.tiles[rn + r][cn + c].z = 60; 
-      }
-    }
-  }
+  // for(r = -10; r < 10; r++) {
+  //   for(c = -7; c < 7; c++) {
+
+  //     var t = that.tiles[rn + r][cn + c];
+
+  //     if ( random() ) {
+  //       t.type = cobblestone;
+  //       t.z = 90; 
+  //     }
+  //   }
+  // }
   // for(r = -3; r < 3; r++) {
   //   for(c = -3; c < 3; c++) {
   //     this.tiles[rn + r][cn + c].z = -30;
