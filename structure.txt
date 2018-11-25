@@ -1,4 +1,6 @@
-Future structure
+
+
+
 -----------------------------------
 game
   //properties
@@ -17,23 +19,6 @@ game
             pressed t/f
       keys
         pressed
-    objects
-      map
-        template
-          properties
-          methods
-        current (loaded map)
-        saved
-          saved maps
-          ...
-      creatures
-        player
-        npc's
-        monsters
-      static
-        terrain
-        vegetation
-        structures
     settings
       gameplay
         key bindings
@@ -65,6 +50,28 @@ game
           in game menu
       css
 
+  objects
+    properties
+      x, y, z
+      xV, yV, zV
+    methods
+
+    map
+      properties
+      methods
+      current (loaded map)
+      saved
+        saved maps
+        ...
+    creatures
+      player
+      npc's
+      monsters
+    static
+      terrain
+      vegetation
+      structures
+
   // methods - this is only list of methods, each should be part of corresponding object
   engine
     generate map
@@ -84,7 +91,7 @@ game
           canvas
           context
           append to html
-          add event listener for window resize
+          register event listener for window resize
       generate objects / map (terrain, vegetation, structures), player, npc's, monsters
       initiate
         input
@@ -103,3 +110,7 @@ game
     keyboard
       update
         keys pressed
+
+********************************
+
+

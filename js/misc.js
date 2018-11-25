@@ -7,6 +7,13 @@ function customMessage(ctx, message, x, y, xOffset, yOffset, fontSize, resetCanv
   ctx.fillText(message, x + xOffset, y + yOffset);
 };
 
+// this function returns true or false randomly and alows to specify
+// chance of the outcome in %. 
+function random (chance) {
+  var n = Math.round( Math.random() * 1 ) === 1 ? true : false;
+  return n;
+}
+
 function drawCanvasCenter(color, ctx) {
   ctx.save()
   ctx.setTransform(1, 0, 0, 1, 0, 0);

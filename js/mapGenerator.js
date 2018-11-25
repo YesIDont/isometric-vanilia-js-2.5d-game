@@ -4,6 +4,7 @@ let grass = new Image(),
     mud = new Image(),
     cobblestone = new Image(),
     lava = new Image(),
+    blackdirt = new Image(),
     white = new Image();
 
 grass.src = "img/map/grass_77x100px_block1.png",
@@ -11,6 +12,7 @@ dirt.src = "img/map/grass_77x100px_block2.png",
 mud.src = "img/map/grass_77x100px_block3.png",
 cobblestone.src = "img/map/grass_77x100px_block4.png",
 lava.src = "img/map/lava_77x100px_block1.png",
+blackdirt.src = "img/map/blackdirt.png",
 white.src = "img/map/white_77x100px_block1.png";
 
 function generateMap (
@@ -131,16 +133,71 @@ function generateMap (
   // this.moveOneTile(37, 17, -10);
   // this.moveOneTile(35, 19, -20);
 
-  this.startInHell();
+  // this.startInHell();
 
   // this.whites();
-
+  this.cave();
   this.findMaxAndMinZ();
 };
 
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
+
+generateMap.prototype.cave = function() {
+  this.tragicEnding = true;
+  var that = this;
+  // turn all tiles to black dirt
+  for(r = 0; r < that.tiles.length; r++) {
+    for(c = 0; c < that.tiles[r].length; c++) {
+        that.tiles[r][c].type = blackdirt;
+    }
+  }
+  // create stone stage in center of the map
+  var rn = this.tiles.length / 2;
+  var cn = this.tiles[rn].length / 2;
+  for(r = -6; r < 6; r++) {
+    for(c = -4; c < 4; c++) {
+      that.tiles[rn + r][cn + c].type = cobblestone;
+      that.tiles[rn + r][cn + c].z = 60;
+    }
+  }
+  // randomly widen the cave on the edges
+  for(r = -10; r < 10; r++) {
+    for(c = -7; c < 7; c++) {
+      if ( random() ) {
+        that.tiles[rn + r][cn + c].type = cobblestone;
+        that.tiles[rn + r][cn + c].z = 60; 
+      }
+    }
+  }
+  // for(r = -3; r < 3; r++) {
+  //   for(c = -3; c < 3; c++) {
+  //     this.tiles[rn + r][cn + c].z = -30;
+  //   }
+  // }
+  // for(r = -2; r < 2; r++) {
+  //   for(c = -2; c < 2; c++) {
+  //     this.tiles[rn + r][cn + c].z = -50;
+  //   }
+  // }
+  // // randomly pull up tiles and turn them to stone
+  // if(typeof this.randomTile !== undefined) {
+  //     for(i = 0; i < 4500; i++) {
+  //       let rnd = that.randomTile();
+  //       rnd.z -= Math.floor( (Math.random() * 15) );
+  //       rnd.type = cobblestone//that.randomType();
+  //     }
+  // }
+  // // turn all tiles that have z = 0 to lava
+  // for(r = 0; r < that.tiles.length; r++) {
+  //   for(c = 0; c < that.tiles[r].length; c++) {
+  //      if ( that.tiles[r][c].z >= 0 ) {
+  //       that.tiles[r][c].type = lava;
+  //      }
+  //   }
+  // }
+}
 
 generateMap.prototype.startInHell = function() {
   this.tragicEnding = true;
@@ -153,7 +210,7 @@ generateMap.prototype.startInHell = function() {
   }
   // create stone stage in center of the map
   var rn = this.tiles.length / 2;
-  var cn = this.tiles[rn].length /2;
+  var cn = this.tiles[rn].length / 2;
   for(r = -7; r < 7; r++) {
     for(c = -5; c < 5; c++) {
       this.tiles[rn + r][cn + c].z = -((Math.floor( (Math.random() * 10) )) + 5);

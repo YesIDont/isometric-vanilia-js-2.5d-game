@@ -52,8 +52,8 @@ function createCharacter(playerSpeedInPx){
   this.weight = 4; // draws the line for how fast object can be falling
   this.isInTheAir = false;
   this.isJumping = false;
-  this.jumpDistance = 2;
-  this.jumpHeight = 6;
+  this.jumpDistance = 1;
+  this.jumpHeight = 5;
   this.jumpDelay = 15;
   this.jumpDelayCounter = 0;
   this.xV = 0; // horizontal velocity
@@ -64,7 +64,7 @@ function createCharacter(playerSpeedInPx){
   this.lastTileStoodOn = {};
 
   // on how much higher tile player can step without jumping (in px)
-  this.maxStepWithoutJump = 15;
+  this.maxStepWithoutJump = 12;
   this.lastLog = "";
   this.lastTileLogged = {};
   this.log = {
