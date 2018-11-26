@@ -3,9 +3,9 @@ let grass         = new Image(),
     grasslight    = new Image(),
     grassdark     = new Image(),
     dirtblack     = new Image(),
-    dirtblacklong = new Image(),    
+    dirtblacklong = new Image(),
     cobblestone   = new Image(),
-    lava          = new Image(),    
+    lava          = new Image(),
     white         = new Image(),
 
     tilePath = "img/map/tiles/";
@@ -155,13 +155,13 @@ function generateMap (
 // random tile on random edge
 generateMap.prototype.rToRe = function() {
   var that = this;
-  
+
   // 0 - top, 1 - right, 2 - bottom, 3 - left
   var draw = random(4),
       s, // starting tile
       rn = that.yTilesNumber,  // number of rows
       cn = that.xTilesNumber,  // number of columns
-      
+
       rr = random(rn),  // random row
       cr = random(cn),  // random column
       t = that.tiles;   // reference for tile array
@@ -176,12 +176,13 @@ generateMap.prototype.rToRe = function() {
 }
 
 generateMap.prototype.river = function() {
+  var that = this;
   /*
       1. Draw starting tile on one of the edges
       2. Draw ending tile on one of the edges, but not the same as starting tile
       3. Draw additional point on the map where river will turn
       4. Change type of all of the tiles on the way from start, through turn points to the end
-  */  
+  */
 
   // starting tile of the river
   var st = this.rToRe(); // random tile on random edge
@@ -192,12 +193,24 @@ generateMap.prototype.river = function() {
   }
   while ( et.r == st.r || et.c === st.c );
 
-  
   st.type = lava;
   et.type = lava;
 
-  // looper over tiles in straigth line from start to end and change them
-  
+  // looper over tiles in straigth line from start to end
+  var rTemp = st.r, cTemp = st.c, tTemp; // temporary vars for r, c and tile to modify
+  l(rTemp); l(cTemp);
+  do {
+    if ( et.r > st.r ) { rTemp = st.r +=1; }
+    if ( et.r < st.r ) { rTemp = st.r -=1; }
+    l(rTemp);
+
+    if ( et.c > st.c ) { cTemp = st.c +=1; }
+    if ( et.c < st.c ) { cTemp = st.c -=1; }
+    l(cTemp);
+
+    tTemp = that.tiles[rTemp][cTemp];
+    tTemp.type = lava;
+  } while ( et.r !== tTemp.r || et.c !== tTemp.c );
 }
 
 generateMap.prototype.cave = function() {
@@ -222,44 +235,6 @@ generateMap.prototype.cave = function() {
       t.z = 90;
     }
   }
-  // randomly widen the cave on the edges
-  // for(r = -10; r < 10; r++) {
-  //   for(c = -7; c < 7; c++) {
-
-  //     var t = that.tiles[rn + r][cn + c];
-
-  //     if ( trueOrFalse() ) {
-  //       t.type = cobblestone;
-  //       t.z = 90; 
-  //     }
-  //   }
-  // }
-  // for(r = -3; r < 3; r++) {
-  //   for(c = -3; c < 3; c++) {
-  //     this.tiles[rn + r][cn + c].z = -30;
-  //   }
-  // }
-  // for(r = -2; r < 2; r++) {
-  //   for(c = -2; c < 2; c++) {
-  //     this.tiles[rn + r][cn + c].z = -50;
-  //   }
-  // }
-  // // randomly pull up tiles and turn them to stone
-  // if(typeof this.randomTile !== undefined) {
-  //     for(i = 0; i < 4500; i++) {
-  //       let rnd = that.randomTile();
-  //       rnd.z -= Math.floor( (Math.random() * 15) );
-  //       rnd.type = cobblestone//that.randomType();
-  //     }
-  // }
-  // // turn all tiles that have z = 0 to lava
-  // for(r = 0; r < that.tiles.length; r++) {
-  //   for(c = 0; c < that.tiles[r].length; c++) {
-  //      if ( that.tiles[r][c].z >= 0 ) {
-  //       that.tiles[r][c].type = lava;
-  //      }
-  //   }
-  // }
 }
 
 generateMap.prototype.startInHell = function() {
