@@ -143,7 +143,7 @@ function generateMap (
 
   // this.cave();
 
-  this.river();
+  this.river(this.tiles[0][0]);
 
   this.findMaxAndMinZ();
 };
@@ -175,7 +175,7 @@ generateMap.prototype.rToRe = function() {
   return s;
 }
 
-generateMap.prototype.river = function() {
+generateMap.prototype.river = function(start, end) {
   var that = this;
   /*
       1. Draw starting tile on one of the edges
@@ -185,44 +185,57 @@ generateMap.prototype.river = function() {
   */
 
   // starting tile of the river
-  var st = this.rToRe(); // random tile on random edge
+  var st = !start ? this.rToRe() : start; // random tile on random edge
 
-  // if tiles are on the same edge draw ending tile again
-  do {
-    et = this.rToRe()
+  if ( end ) {
+    et = end;
+
+  } else {
+    // if tiles are on the same edge draw ending tile again
+    do {
+      et = this.rToRe()
+    }
+    while ( et.r == st.r || et.c === st.c );    
   }
-  while ( et.r == st.r || et.c === st.c );
+
+
+
 
   // looper over tiles in straigth line from start to end
   var rTemp = st.r,
-      rLast,
+      rLast, cLast,
       cTemp = st.c,
       tTemp,      // temporary vars for r, c and tile to modify
       s = true;   // switch betwean r or c
 
+  l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c )
   do {
-    if ( s ) {
+    // if ( s ) {
       // r
       if ( et.r > st.r ) { rTemp = st.r +=1; }
       if ( et.r < st.r ) { rTemp = st.r -=1; }
-      s = false;
+      // s = false;
 
-    } else {
+    // } else {
       // c
       // if column is even make it odd, yeah, it's odd
       // if ( cTemp % 2 === 0 ) { cTemp -= 1 }
 
       if ( et.c > st.c ) { cTemp = st.c +=1; }
       if ( et.c < st.c ) { cTemp = st.c -=1; }
-      s = true;
-    }  
+      // s = true;
+    // }  
 
+    // set temporary tile to manipulate
     tTemp = that.tiles[rTemp][cTemp];
-    tTemp.type = white;
+
+    if ( rTemp % 2 === 0 /*|| ( cTemp !== cLast && rTemp !== rLast )*/ ) { // make slim line, avoid repeates
+      tTemp.type = white;
+    }    
 
     rLast = rTemp;
+    cLast = cTemp;
     
-    l( "r: " + rTemp + " c: " + cTemp );
   } while ( et.r !== tTemp.r || et.c !== tTemp.c );
 }
 
