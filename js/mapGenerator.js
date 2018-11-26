@@ -143,12 +143,62 @@ function generateMap (
 
   // this.cave();
 
+  this.river();
+
   this.findMaxAndMinZ();
 };
 
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
+
+// random tile on random edge
+generateMap.prototype.rToRe = function() {
+  var that = this;
+  
+  // 0 - top, 1 - right, 2 - bottom, 3 - left
+  var draw = random(4),
+      s, // starting tile
+      rn = that.yTilesNumber,  // number of rows
+      cn = that.xTilesNumber,  // number of columns
+      
+      rr = random(rn),  // random row
+      cr = random(cn),  // random column
+      t = that.tiles;   // reference for tile array
+
+  switch ( draw ) {
+    case 0: s = t[0][cr];       break;
+    case 1: s = t[rr][cn - 1];  break;
+    case 2: s = t[rn - 1][cr];  break;
+    case 3: s = t[rr][0];       break;
+  }
+  return s;
+}
+
+generateMap.prototype.river = function() {
+  /*
+      1. Draw starting tile on one of the edges
+      2. Draw ending tile on one of the edges, but not the same as starting tile
+      3. Draw additional point on the map where river will turn
+      4. Change type of all of the tiles on the way from start, through turn points to the end
+  */  
+
+  // starting tile of the river
+  var st = this.rToRe(); // random tile on random edge
+
+  // if tiles are on the same edge draw ending tile again
+  do {
+    et = this.rToRe()
+  }
+  while ( et.r == st.r || et.c === st.c );
+
+  
+  st.type = lava;
+  et.type = lava;
+
+  // looper over tiles in straigth line from start to end and change them
+  
+}
 
 generateMap.prototype.cave = function() {
   this.tragicEnding = true;
@@ -178,7 +228,7 @@ generateMap.prototype.cave = function() {
 
   //     var t = that.tiles[rn + r][cn + c];
 
-  //     if ( random() ) {
+  //     if ( trueOrFalse() ) {
   //       t.type = cobblestone;
   //       t.z = 90; 
   //     }

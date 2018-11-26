@@ -7,11 +7,24 @@ function customMessage(ctx, message, x, y, xOffset, yOffset, fontSize, resetCanv
   ctx.fillText(message, x + xOffset, y + yOffset);
 };
 
-// this function returns true or false randomly and alows to specify
+// returns true or false randomly and alows to specify
 // chance of the outcome in %. 
-function random (chance) {
+function trueOrFalse (chance) {
   var n = Math.round( Math.random() * 1 ) === 1 ? true : false;
   return n;
+}
+
+// Draws random number from specyfied range.
+// Argument must be > 0. Range is offset by -1, as it always
+// starts with 0
+function random (r) {
+  var n = r === undefined || r === false || r < 2 ? 1 : r - 1;
+  var random = Math.round( Math.random() * n);
+  return random;
+}
+
+function l(n) {
+  console.log(n);
 }
 
 function drawCanvasCenter(color, ctx) {

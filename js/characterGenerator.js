@@ -53,7 +53,7 @@ function createCharacter(playerSpeedInPx){
   this.isInTheAir = false;
   this.isJumping = false;
   this.jumpDistance = 1;
-  this.jumpHeight = 5;
+  this.jumpHeight = 7;
   this.jumpDelay = 15;
   this.jumpDelayCounter = 0;
   this.xV = 0; // horizontal velocity
