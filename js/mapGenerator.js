@@ -193,23 +193,36 @@ generateMap.prototype.river = function() {
   }
   while ( et.r == st.r || et.c === st.c );
 
-  st.type = lava;
-  et.type = lava;
-
   // looper over tiles in straigth line from start to end
-  var rTemp = st.r, cTemp = st.c, tTemp; // temporary vars for r, c and tile to modify
-  l(rTemp); l(cTemp);
-  do {
-    if ( et.r > st.r ) { rTemp = st.r +=1; }
-    if ( et.r < st.r ) { rTemp = st.r -=1; }
-    l(rTemp);
+  var rTemp = st.r,
+      rLast,
+      cTemp = st.c,
+      tTemp,      // temporary vars for r, c and tile to modify
+      s = true;   // switch betwean r or c
 
-    if ( et.c > st.c ) { cTemp = st.c +=1; }
-    if ( et.c < st.c ) { cTemp = st.c -=1; }
-    l(cTemp);
+  do {
+    if ( s ) {
+      // r
+      if ( et.r > st.r ) { rTemp = st.r +=1; }
+      if ( et.r < st.r ) { rTemp = st.r -=1; }
+      s = false;
+
+    } else {
+      // c
+      // if column is even make it odd, yeah, it's odd
+      // if ( cTemp % 2 === 0 ) { cTemp -= 1 }
+
+      if ( et.c > st.c ) { cTemp = st.c +=1; }
+      if ( et.c < st.c ) { cTemp = st.c -=1; }
+      s = true;
+    }  
 
     tTemp = that.tiles[rTemp][cTemp];
-    tTemp.type = lava;
+    tTemp.type = white;
+
+    rLast = rTemp;
+    
+    l( "r: " + rTemp + " c: " + cTemp );
   } while ( et.r !== tTemp.r || et.c !== tTemp.c );
 }
 
