@@ -51,6 +51,26 @@ function playerBase(ctx, color) {
   player.collisionModel.base.poly.fill(ctx, color);
 };
 
+function bezierFromPointToPoint
+  (
+    x1, y1, // staring point coordinates
+    x2, y2, // ending point cooridantes
+    xB, yB  // bezier mod - by how much line will be bend
+  )
+{
+  var x, y;
+
+  ctx.moveTo(x1, y1);
+
+  for(t=0; t <= 1; t += 0.01)
+  {
+    x = (1 - t) * (1 - t) * x1 + 2 * (1-t) * t * xB + t * t * x2;
+    y = (1 - t) * (1 - t) * y1 + 2 * (1-t) * t * yB + t * t * y2;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+}
 var isGameOver = false;
 
 // massage on dark background

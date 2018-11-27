@@ -153,7 +153,7 @@ function generateMap (
 //----------------------------------------
 
 // random tile on random edge
-generateMap.prototype.rToRe = function() {
+generateMap.prototype.randomTileOnRandomEdge = function() {
   var that = this;
 
   // 0 - top, 1 - right, 2 - bottom, 3 - left
@@ -175,8 +175,12 @@ generateMap.prototype.rToRe = function() {
   return s;
 }
 
-generateMap.prototype.river = function(start, end) {
-  var that = this;
+generateMap.prototype.river = function( start, end, xB, yB ) {
+  var that = this,
+      start = start || false,
+      end   = end   || false,
+      xB    = 1,
+      yB    = 1;
   /*
       1. Draw starting tile on one of the edges
       2. Draw ending tile on one of the edges, but not the same as starting tile
@@ -185,7 +189,7 @@ generateMap.prototype.river = function(start, end) {
   */
 
   // starting tile of the river
-  var st = !start ? this.rToRe() : start; // random tile on random edge
+  var st = !start ? this.randomTileOnRandomEdge() : start; // random tile on random edge
 
   if ( end ) {
     et = end;
@@ -193,50 +197,60 @@ generateMap.prototype.river = function(start, end) {
   } else {
     // if tiles are on the same edge draw ending tile again
     do {
-      et = this.rToRe()
+      et = this.randomTileOnRandomEdge()
     }
     while ( et.r == st.r || et.c === st.c );    
   }
+  l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c );
+  // // looper over tiles in straigth line from start to end
+  // var rTemp = st.r,
+  //     rLast, cLast,
+  //     cTemp = st.c,
+  //     tTemp,      // temporary vars for r, c and tile to modify
+  //     s = true;   // switch betwean r or c
 
+  // l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c )
+  // do {
+  //   // if ( s ) {
+  //     // r
+  //     if ( et.r > st.r ) { rTemp = st.r +=1; }
+  //     if ( et.r < st.r ) { rTemp = st.r -=1; }
+  //     // s = false;
 
+  //   // } else {
+  //     // c
+  //     // if column is even make it odd, yeah, it's odd
+  //     // if ( cTemp % 2 === 0 ) { cTemp -= 1 }
 
+  //     if ( et.c > st.c ) { cTemp = st.c +=1; }
+  //     if ( et.c < st.c ) { cTemp = st.c -=1; }
+  //     // s = true;
+  //   // }  
 
-  // looper over tiles in straigth line from start to end
-  var rTemp = st.r,
-      rLast, cLast,
-      cTemp = st.c,
-      tTemp,      // temporary vars for r, c and tile to modify
-      s = true;   // switch betwean r or c
+  //   // set temporary tile to manipulate
+  //   tTemp = that.tiles[rTemp][cTemp];
 
-  l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c )
-  do {
-    // if ( s ) {
-      // r
-      if ( et.r > st.r ) { rTemp = st.r +=1; }
-      if ( et.r < st.r ) { rTemp = st.r -=1; }
-      // s = false;
+  //   if ( rTemp % 2 === 0 /*|| ( cTemp !== cLast && rTemp !== rLast )*/ ) { // make slim line, avoid repeates
+  //     tTemp.type = white;
+  //   }    
 
-    // } else {
-      // c
-      // if column is even make it odd, yeah, it's odd
-      // if ( cTemp % 2 === 0 ) { cTemp -= 1 }
-
-      if ( et.c > st.c ) { cTemp = st.c +=1; }
-      if ( et.c < st.c ) { cTemp = st.c -=1; }
-      // s = true;
-    // }  
-
-    // set temporary tile to manipulate
-    tTemp = that.tiles[rTemp][cTemp];
-
-    if ( rTemp % 2 === 0 /*|| ( cTemp !== cLast && rTemp !== rLast )*/ ) { // make slim line, avoid repeates
-      tTemp.type = white;
-    }    
-
-    rLast = rTemp;
-    cLast = cTemp;
+  //   rLast = rTemp;
+  //   cLast = cTemp;
     
-  } while ( et.r !== tTemp.r || et.c !== tTemp.c );
+  // } while ( et.r !== tTemp.r || et.c !== tTemp.c );
+
+  for(t=0; t <= 1; t += 0.01)
+  {
+    x = Math.round( (1 - t) * (1 - t) * st.xAbsolute + 2 * (1-t) * t * xB + t * t * et.xAbsolute );
+    y = Math.round( (1 - t) * (1 - t) * st.yAbsolute + 2 * (1-t) * t * yB + t * t * et.yAbsolute );
+
+    x = Math.floor( x / that.xTilesNumber );
+    y = Math.floor( y / that.yTilesNumber );
+
+    if ( that.tiles[x] && that.tiles[x][y] ) { that.tiles[x][y].type = white }
+
+    l(x + " " + y);
+  }
 }
 
 generateMap.prototype.cave = function() {
