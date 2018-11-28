@@ -784,17 +784,19 @@ P.prototype.fill = function (ctx, color, level) {
     ctx.fill();
     ctx.restore();
 };
-P.prototype.stroke = function ( ctx, color ) {
+P.prototype.stroke = function ( ctx, color, level ) {
     var points = this.points;
     var i = points.length;
-
+    
+    ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(this.pos.x + points[0].x, this.pos.y + points[0].y);
-    while (i--) ctx.lineTo(this.pos.x + points[i].x, this.pos.y + points[i].y);
+    ctx.moveTo(this.pos.x + points[0].x, this.pos.y + points[0].y + level);
+    while (i--) ctx.lineTo(this.pos.x + points[i].x, this.pos.y + points[i].y + level);
     ctx.closePath();
     ctx.stroke();
+    ctx.restore();
 };
 P.prototype.strokeWithoutOptions = function ( ctx, i ) {
     let points = this.points;

@@ -1,10 +1,12 @@
 // Custom message constructor
 function customMessage(ctx, message, x, y, xOffset, yOffset, fontSize, resetCanvasTransform) {
 	if(resetCanvasTransform) {ctx.setTransform(1, 0, 0, 1, 0, 0);}
-
+  
+  ctx.save();
   ctx.font = fontSize + "px Bold Arial";
   ctx.fillStyle = "#000000";
   ctx.fillText(message, x + xOffset, y + yOffset);
+  ctx.restore();
 };
 
 // returns true or false randomly and alows to specify

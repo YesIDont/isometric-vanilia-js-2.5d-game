@@ -104,22 +104,23 @@ function selectTiles() {
   var cP = Math.floor( ( mouse.x + Math.abs( m.offsetTopLeft.x) ) / m.tileWidth );
 
   for( r = rP - 2; r < rP + 2; r++ ) {
-
     if( r >= 0 && r < m.tiles.length ) {
-
       for( c = cP - 1; c < cP + 1; c++ ) {
-
         if( c >= 0 && c < m.tiles[r].length ) {
 
           var re = new SAT.Response();
+          var t = m.tiles[r][c];
+          // l(t);
           re.clear();          
 
-          col = mousePoly.collidesWith(m.tiles[r][c].base, re);
+          col = mousePoly.collidesWith(t.base, re);
 
           if( col ) {
-
-            m.tiles[r][c].base.fill( ctx, "rgba(0, 110, 255, 0.3)" );
-            m.tiles[r][c].base.stroke( ctx, "rgb(0, 0, 255)" );
+						// l(t.r + " " + t.c);
+            t.base.fill( ctx, "rgba(0, 110, 255, 0.5)", t.z ); // rgba(0, 110, 255, 0.5)
+            // l(t.r + " " + t.c);
+            t.base.stroke( ctx, "rgb(0, 0, 255)", t.z );
+            t.base.stroke( ctx, "rgb(255, 0, 0)", 0 );
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             customMessage( ctx, "r: " + r, mouse.x, mouse.y, 40, -10, 20 );
@@ -127,10 +128,12 @@ function selectTiles() {
             
             ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
 
-            if( !mouse.isDown ) { m.selectedTile = m.tiles[r][c]; };
+            if( !mouse.isDown ) { m.selectedTile = t; };
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             customMessage( ctx, "z: " + m.selectedTile.z, mouse.x, mouse.y, 40, 30, 20 );
+            customMessage( ctx, "mouse x: " + mouse.x, mouse.x, mouse.y, 40, 50, 20 );
+            customMessage( ctx, "mouse y: " + mouse.y, mouse.x, mouse.y, 40, 70, 20 );
             ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
           }
         }  

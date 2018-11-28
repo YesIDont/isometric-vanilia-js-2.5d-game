@@ -5,7 +5,9 @@ generateMap.prototype.createLayer = function() {
     that.tiles[r] = [r];
     for(c = 0; c < that.xTilesNumber; c++) {
       that.tiles[r][c] = {
-        // Absolute values describe coordinates for each tile in realtion to map.
+        r: r,
+        c: c,
+        // Absolute values describe coordinates for each tile in realtion to map top left corner.
         // Next values are coordinates used when moving map relative to canvas.
         xAbsolute: that.calculateTile_x( r, c ),
         yAbsolute: that.calculateTile_y( r, c ),
@@ -13,13 +15,12 @@ generateMap.prototype.createLayer = function() {
         y: that.calculateTile_y( r, c ),
         z: 0,
         //address: row and column
-        r: r,
-        c: c,
         canWalkOnIt: true,
         playerStandsOnIt: false,
         // randomly chooses one of four tile types and if Island map type is enabled - makes edge of map water
         type: that.imgType()
       };
+      l("r: " + r + " c: " + c);
     };
   };
 };

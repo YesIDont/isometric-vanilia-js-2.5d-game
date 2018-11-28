@@ -143,7 +143,12 @@ function generateMap (
 
   // this.cave();
 
-  this.river(this.tiles[0][0]);
+  this.river(
+    this.tiles[0][0],
+    this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
+    500,
+    1
+  );
 
   this.findMaxAndMinZ();
 };
@@ -175,22 +180,25 @@ generateMap.prototype.randomTileOnRandomEdge = function() {
   return s;
 }
 
-generateMap.prototype.river = function( start, end, xB, yB ) {
-  var that = this,
-      start = start || false,
-      end   = end   || false,
-      xB    = 1,
-      yB    = 1;
+generateMap.prototype.river = function( start, end, xBezier, yBezier ) {
+  var m = this,
+      xB = xBezier  || 1,
+      yB = yBezier  || 1,
+      xLast, yLast, rLast, cLast, rTemp, cTemp,
+      bezierPoly, col, // colision variables
+      tt, lt; // temporary tile and last tile
   /*
       1. Draw starting tile on one of the edges
       2. Draw ending tile on one of the edges, but not the same as starting tile
-      3. Draw additional point on the map where river will turn
+      3. Draw additional point on the map where river will turn, multiple point possible
       4. Change type of all of the tiles on the way from start, through turn points to the end
   */
 
-  // starting tile of the river
+  // starting tile
   var st = !start ? this.randomTileOnRandomEdge() : start; // random tile on random edge
+  m.ltp( st, "start" );
 
+  // ending tile
   if ( end ) {
     et = end;
 
@@ -201,55 +209,58 @@ generateMap.prototype.river = function( start, end, xB, yB ) {
     }
     while ( et.r == st.r || et.c === st.c );    
   }
-  l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c );
-  // // looper over tiles in straigth line from start to end
-  // var rTemp = st.r,
-  //     rLast, cLast,
-  //     cTemp = st.c,
-  //     tTemp,      // temporary vars for r, c and tile to modify
-  //     s = true;   // switch betwean r or c
+  m.ltp( et, "end" );
 
-  // l("start: " + st.r + " " + st.c + " end: " + et.r + " " + et.c )
-  // do {
-  //   // if ( s ) {
-  //     // r
-  //     if ( et.r > st.r ) { rTemp = st.r +=1; }
-  //     if ( et.r < st.r ) { rTemp = st.r -=1; }
-  //     // s = false;
+  // create poly to colide with tiles on its way from start to end
+  bezierPoly = new P(new V(-1, -1), [
+    new V(1, 1),
+    new V(1, 1),
+    new V(1, 1),
+    new V(1, 1)
+  ]);
 
-  //   // } else {
-  //     // c
-  //     // if column is even make it odd, yeah, it's odd
-  //     // if ( cTemp % 2 === 0 ) { cTemp -= 1 }
-
-  //     if ( et.c > st.c ) { cTemp = st.c +=1; }
-  //     if ( et.c < st.c ) { cTemp = st.c -=1; }
-  //     // s = true;
-  //   // }  
-
-  //   // set temporary tile to manipulate
-  //   tTemp = that.tiles[rTemp][cTemp];
-
-  //   if ( rTemp % 2 === 0 /*|| ( cTemp !== cLast && rTemp !== rLast )*/ ) { // make slim line, avoid repeates
-  //     tTemp.type = white;
-  //   }    
-
-  //   rLast = rTemp;
-  //   cLast = cTemp;
-    
-  // } while ( et.r !== tTemp.r || et.c !== tTemp.c );
-
-  for(t=0; t <= 1; t += 0.01)
+  for( i = 0; i <= 1; i += 0.01 )
   {
-    x = Math.round( (1 - t) * (1 - t) * st.xAbsolute + 2 * (1-t) * t * xB + t * t * et.xAbsolute );
-    y = Math.round( (1 - t) * (1 - t) * st.yAbsolute + 2 * (1-t) * t * yB + t * t * et.yAbsolute );
+    x = Math.round( (1 - i) * (1 - i) * st.xAbsolute + 2 * (1-i) * i * xB + i * i * et.xAbsolute );
+    y = Math.round( (1 - i) * (1 - i) * st.yAbsolute + 2 * (1-i) * i * yB + i * i * et.yAbsolute );
+    
+    rTemp = Math.floor( y / m.tileHeightHalf );
+    cTemp = Math.floor( x / m.tileWidth );    
 
-    x = Math.floor( x / that.xTilesNumber );
-    y = Math.floor( y / that.yTilesNumber );
+    // if ( rTemp !== rLast || cTemp !== cLast )
+    // {
+      // l("x: " + x + " y: " + y);
+      // l("r: " + rTemp + " c: " + cTemp);
 
-    if ( that.tiles[x] && that.tiles[x][y] ) { that.tiles[x][y].type = white }
+      bezierPoly.pos.x = x;
+      bezierPoly.pos.y = y;      
+      
+      // loop over narrow area around tile and test collisions
+      for( r = rTemp - 2; r < rTemp + 2; r++ ) {
+        if( r >= 0 && r < m.tiles.length ) {
+          for( c = cTemp - 1; c < cTemp + 1; c++ ) {
+            if( c >= 0 && c < m.tiles[r].length ) {
+              
+              var re = new SAT.Response();
+              var t = m.tiles[r][c];
+              // l(t);
+              re.clear();          
 
-    l(x + " " + y);
+              col = bezierPoly.collidesWith(t.base, re);
+
+              if( col ) {
+                t.type = cobblestone;
+                t.z = -30;
+                // l("col r: " + r + " c: " + c);
+                // l(" ");
+              }
+            }  
+          }
+        }
+      }
+    // }
+    // rLast = rTemp;
+    // cLast = cTemp;
   }
 }
 
@@ -604,3 +615,8 @@ generateMap.prototype.cameraUpdate = function ( m, x, y, z ) {
 
   m.updateTilesOutside();
 };
+// log tile position: r, c
+generateMap.prototype.ltp = function( t, message ) {
+  var m = message || "";
+  l(m + "r: " + t.r + " " + " c: " + t.c)
+}
