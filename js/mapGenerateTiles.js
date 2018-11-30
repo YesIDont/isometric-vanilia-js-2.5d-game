@@ -20,7 +20,7 @@ generateMap.prototype.createLayer = function() {
         // randomly chooses one of four tile types and if Island map type is enabled - makes edge of map water
         type: that.imgType()
       };
-      l("r: " + r + " c: " + c);
+      // l("r: " + r + " c: " + c);
     };
   };
 };

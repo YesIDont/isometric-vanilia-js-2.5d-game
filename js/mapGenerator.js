@@ -146,12 +146,13 @@ function generateMap (
   this.river(
     this.tiles[0][0],
     this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
-    500,
+    550,
     1
   );
 
   this.findMaxAndMinZ();
 };
+
 
 
 // Generators - are deployed before the game start to calculate map shape
@@ -179,14 +180,26 @@ generateMap.prototype.randomTileOnRandomEdge = function() {
   }
   return s;
 }
-
-generateMap.prototype.river = function( start, end, xBezier, yBezier ) {
+/*
+  This function returns array of tiles that lay on the calculated
+  line of bezier curve.
+  start - tile from witch curve will start
+  end - tile where curve will end
+  xBezier - defines first mod for bezier curve
+  yBezier - as above but second
+  colOnly - if true returned array will consist only from tiles laying directly on
+            the bezier curve, if not than second parameter can be specyfied
+            - rWidth - to define how wide river will be
+*/
+generateMap.prototype.river = function( start, end, xBezier, yBezier, col ) {
   var m = this,
       xB = xBezier  || 1,
       yB = yBezier  || 1,
       xLast, yLast, rLast, cLast, rTemp, cTemp,
       bezierPoly, col, // colision variables
-      tt, lt; // temporary tile and last tile
+      tt, lt, // temporary tile and last tile
+      colOnly = col || true,
+      river; // array of tiles creating river that will be returned at the end
   /*
       1. Draw starting tile on one of the edges
       2. Draw ending tile on one of the edges, but not the same as starting tile
@@ -196,7 +209,7 @@ generateMap.prototype.river = function( start, end, xBezier, yBezier ) {
 
   // starting tile
   var st = !start ? this.randomTileOnRandomEdge() : start; // random tile on random edge
-  m.ltp( st, "start" );
+  // m.ltp( st, "start" );
 
   // ending tile
   if ( end ) {
@@ -209,7 +222,7 @@ generateMap.prototype.river = function( start, end, xBezier, yBezier ) {
     }
     while ( et.r == st.r || et.c === st.c );    
   }
-  m.ltp( et, "end" );
+  // m.ltp( et, "end" );
 
   // create poly to colide with tiles on its way from start to end
   bezierPoly = new P(new V(-1, -1), [
@@ -247,13 +260,18 @@ generateMap.prototype.river = function( start, end, xBezier, yBezier ) {
               re.clear();          
 
               col = bezierPoly.collidesWith(t.base, re);
+              
+              // if ( colOnly ) {
+                // if( col && colOnly ) {
+                  t.z = 25;
+                  t.type = lava;
+                  // t.z = 10;
+                  // l("col r: " + r + " c: " + c);
+                  // l(" ");
+                // }
+              // } else {
 
-              if( col ) {
-                t.type = cobblestone;
-                t.z = -30;
-                // l("col r: " + r + " c: " + c);
-                // l(" ");
-              }
+              // }
             }  
           }
         }
@@ -505,18 +523,27 @@ generateMap.prototype.makeWall = function() {
   };
 
 // writeTilesBase creates for each tile vector base which will be used
-// to calculate collision with player and other character
+// to calculate collision with player and other characters
 generateMap.prototype.calculateTilesBase = function(){
   let that = this,
-      n = -1;
+      n = -1,
+      t;
+
   for (r = 0; r < that.yTilesNumber; r++) {
     for(c = 0; c < that.xTilesNumber; c++) {
-      that.tiles[r][c].base = new P(new V(that.tiles[r][c].x, that.tiles[r][c].y), [
-          new V(that.tileWidthHalf + n, n),
-          new V(that.tileWidth + n, that.tileHeightHalf + n),
-          new V(that.tileWidthHalf + n, that.tileHeight + n),
-          new V(n, that.tileHeightHalf + n)
+
+      t = that.tiles[r][c];
+      // l(t.r + " " + t.c);
+      // l(t.x + " " + t.y);
+      // l(x + " " + y);
+
+      t.base = new P( new V(t.x, t.y ), [
+          new V( that.tileWidthHalf + n, n ),
+          new V( that.tileWidth + n, that.tileHeightHalf + n ),
+          new V( that.tileWidthHalf + n, that.tileHeight + n ),
+          new V( n, that.tileHeightHalf + n )
       ]);
+      // l(t.r + " " + t.c + " bx: " + t.base.pos.x + " by: " + t.base.pos.y);
     };
   };
 };
@@ -561,8 +588,6 @@ generateMap.prototype.startPositionSwitch = function(startPosition_x, startPosit
   ctx1.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
   // ctx2.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
   // ctx3.translate(that.offsetTopLeft.x, that.offsetTopLeft.y);
-
-  console.log(player. x + " " + player.y + " " + player.z )
 };
 
 generateMap.prototype.findMaxAndMinZ = function () {
