@@ -93,6 +93,23 @@ function generateMap (
 
   // fill the above array with data on each tile
   this.createLayer();
+  // map corners
+  this.c = {
+    // top
+    t: {
+      // left
+      l: that.tiles[0][0],
+      // right
+      r: that.tiles[0][this.tiles.length - 1]
+    },
+    // bottom
+    b: {
+      // left
+      l: that.tiles[that.tiles.length - 1][0],
+      // right
+      r: that.tiles[that.tiles.length - 1][that.tiles[0].length - 1]
+    }
+  };
   this.calculateTilesBase();
 
   this.strokeAllTilesBase = function( ctx, color ) {
@@ -142,13 +159,13 @@ function generateMap (
   // this.whites();
 
   // this.cave();
-
-  this.river(
-    this.tiles[0][0],
-    this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
-    550,
-    1
-  );
+  this.river( 1, 1, 1, this.c.t.l, this.c.b.r );
+  // this.river(
+  //   this.tiles[0][0],
+  //   this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
+  //   550,
+  //   1
+  // );
 
   this.findMaxAndMinZ();
 };
@@ -157,6 +174,19 @@ function generateMap (
 
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
+
+generateMap.prototype.river = function( riverWidth, xBezier, yBezier, start, end ) {
+  var that = this;
+
+  var river = that.tilesOnBezierCurve( riverWidth, xBezier, yBezier, start, end );
+
+  for ( i = 0; i < river.length; i++ ) {
+    if ( river[i] ) {
+      river[i].z = 10;
+      river[i].type = lava;
+    }
+  }
+}
 
 // random tile on random edge
 generateMap.prototype.randomTileOnRandomEdge = function() {
@@ -187,26 +217,17 @@ generateMap.prototype.randomTileOnRandomEdge = function() {
   end - tile where curve will end
   xBezier - defines first mod for bezier curve
   yBezier - as above but second
-  colOnly - if true returned array will consist only from tiles laying directly on
-            the bezier curve, if not than second parameter can be specyfied
-            - rWidth - to define how wide river will be
-*/
-generateMap.prototype.river = function( start, end, xBezier, yBezier, col ) {
-  var m = this,
-      xB = xBezier  || 1,
-      yB = yBezier  || 1,
-      xLast, yLast, rLast, cLast, rTemp, cTemp,
-      bezierPoly, col, // colision variables
-      tt, lt, // temporary tile and last tile
-      colOnly = col || true,
-      river; // array of tiles creating river that will be returned at the end
-  /*
-      1. Draw starting tile on one of the edges
-      2. Draw ending tile on one of the edges, but not the same as starting tile
-      3. Draw additional point on the map where river will turn, multiple point possible
-      4. Change type of all of the tiles on the way from start, through turn points to the end
-  */
+  riverWidth - rWidth - to define how wide river will be in number of tiles,
+               from line made out of single tiles to specyfied width in tiles
 
+  How it works?
+    1. Draw starting tile on one of the edges
+    2. Draw ending tile on one of the edges, but not the same as starting tile
+    3. Draw additional point on the map where river will turn, multiple point possible
+    4. Change type of all of the tiles on the way from start, through turn points to the end
+
+*/
+generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezier, start, end ) {
   // starting tile
   var st = !start ? this.randomTileOnRandomEdge() : start; // random tile on random edge
   // m.ltp( st, "start" );
@@ -218,11 +239,21 @@ generateMap.prototype.river = function( start, end, xBezier, yBezier, col ) {
   } else {
     // if tiles are on the same edge draw ending tile again
     do {
-      et = this.randomTileOnRandomEdge()
+      et = this.randomTileOnRandomEdge();
     }
     while ( et.r == st.r || et.c === st.c );    
   }
   // m.ltp( et, "end" );
+
+  var m = this,
+      xB = xBezier  || 1, // the amoount of the bezier curvature, if false line will be straigth
+      yB = yBezier  || 1,
+      xLast, yLast, rLast, cLast, rTemp, cTemp,
+      bezierPoly, col, re, // colision variables
+      tt, lt, // temporary tile and last tile
+      river = [], // array of tiles creating river that will be returned at the end
+      w = riverWidth || 1, // river width, describes radius mesured in tiles from center tile
+      w1, w2, w3, w4;
 
   // create poly to colide with tiles on its way from start to end
   bezierPoly = new P(new V(-1, -1), [
@@ -232,54 +263,70 @@ generateMap.prototype.river = function( start, end, xBezier, yBezier, col ) {
     new V(1, 1)
   ]);
 
-  for( i = 0; i <= 1; i += 0.01 )
+  for( i = 0; i <= 1; i += 0.001 )
   {
     x = Math.round( (1 - i) * (1 - i) * st.xAbsolute + 2 * (1-i) * i * xB + i * i * et.xAbsolute );
     y = Math.round( (1 - i) * (1 - i) * st.yAbsolute + 2 * (1-i) * i * yB + i * i * et.yAbsolute );
     
-    rTemp = Math.floor( y / m.tileHeightHalf );
-    cTemp = Math.floor( x / m.tileWidth );    
+    rTemp = Math.round( y / m.tileHeightHalf );
+    cTemp = Math.round( x / m.tileWidth );
 
-    // if ( rTemp !== rLast || cTemp !== cLast )
-    // {
-      // l("x: " + x + " y: " + y);
-      // l("r: " + rTemp + " c: " + cTemp);
+    bezierPoly.pos.x = x;
+    bezierPoly.pos.y = y;      
+    
+    // loop over narrow area around tile and test collisions
+    for( r = rTemp - w; r < rTemp + w; r++ ) {
+      if( r >= 0 && r < m.tiles.length ) {
+        for( c = cTemp - w; c < cTemp + w; c++ ) {
+          if( c >= 0 && c < m.tiles[r].length ) {
+            var t = m.tiles[r][c];
 
-      bezierPoly.pos.x = x;
-      bezierPoly.pos.y = y;      
-      
-      // loop over narrow area around tile and test collisions
-      for( r = rTemp - 2; r < rTemp + 2; r++ ) {
-        if( r >= 0 && r < m.tiles.length ) {
-          for( c = cTemp - 1; c < cTemp + 1; c++ ) {
-            if( c >= 0 && c < m.tiles[r].length ) {
+            // set up the collision
+            re = new SAT.Response();
+            re.clear();          
+            col = bezierPoly.collidesWith(t.base, re); // test collision
+
+            if ( col ) { // if collision is true
+              // diferate betwean even and odd width 
+              if ( w % 2 === 0 ) {
+                w1 = w - 2;
+                w4 = 1;
+              }
+              else {
+                w1 = w -1;
+                w4 = 0;
+              }
               
-              var re = new SAT.Response();
-              var t = m.tiles[r][c];
-              // l(t);
-              re.clear();          
+              // half of the width that will be equally redistributed on both sides
+              // should not be less than zero
+              w2 = Math.floor(w1 * 0.5);
+              w3 = w2 < 0 ? 0 : w2;
 
-              col = bezierPoly.collidesWith(t.base, re);
-              
-              // if ( colOnly ) {
-                // if( col && colOnly ) {
-                  t.z = 25;
-                  t.type = lava;
-                  // t.z = 10;
-                  // l("col r: " + r + " c: " + c);
-                  // l(" ");
-                // }
-              // } else {
-
-              // }
-            }  
-          }
+              // loope over range of tiles starting from the tile that colided with the point
+              // on the bezier line end expand if width is bigger than zero
+              for( a = t.r - w3; a < t.r + 1 + w3; a++ ) {
+                if( a >= 0 && a < m.tiles.length ) {
+                  for( b = t.c; b < t.c + 1 + w3 + w4; b++ ) {
+                    if( b >= 0 && b < m.tiles[r].length ) {
+                      river.push( m.tiles[a][b] )
+                      var ab = m.tiles[a][b];
+                      l(ab.r + " " + ab.c);
+                    }
+                  }
+                }
+              }
+            }
+            else {
+              // t.type = cobblestone;
+              // t.z = -8;
+            }
+            // river.push( t );
+          }  
         }
       }
-    // }
-    // rLast = rTemp;
-    // cLast = cTemp;
+    }
   }
+  return river;
 }
 
 generateMap.prototype.cave = function() {
@@ -483,7 +530,7 @@ generateMap.prototype.makeWall = function() {
   let that = this;
     let r = Math.floor((Math.random() * that.yTilesNumber));
     let c = Math.floor((Math.random() * that.xTilesNumber));
-    // wlal lenght
+    // wlal length
     let l = Math.floor((Math.random() * 30));
 
     // Direction: 0 face bottom, 1 left bottom, 2 left, 3 left top, 4 top, 5 right top, 6 right, 7 right bottom
