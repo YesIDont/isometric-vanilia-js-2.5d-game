@@ -8,13 +8,6 @@ generateMap.prototype.render = function(playerObject){
   
   ctx1.setTransform(1, 0, 0, 1, 0, 0);
   ctx1.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
-
-  // ctx2.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx2.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
-
-  // ctx3.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx3.translate(m.offsetTopLeft.x, m.offsetTopLeft.y);
-
   
   // Calculates offset for rendering, this allows to render only tiles visible in canvas and few outside of it.
   // This if checks if the canvas can ignore map.zMin and/or man.zMax to avoid rendering unwanted tiles.
@@ -49,7 +42,7 @@ generateMap.prototype.render = function(playerObject){
     }
   }
 
-  player.animate(ctx1);
+  // player.animate(ctx1);
 
   if ( map.renderSwitch ) {
     // render tiles above player's sprite

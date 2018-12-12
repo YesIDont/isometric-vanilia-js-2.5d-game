@@ -7,17 +7,20 @@ let grass         = new Image(),
     cobblestone   = new Image(),
     lava          = new Image(),
     white         = new Image(),
+    water         = new Image(),
 
-    tilePath = "img/map/tiles/";
+    tilePath = "img/map/tiles/",
+    tileExt  = ".png"
 
-grass.src         = tilePath + "grass.png",
-grasslight.src    = tilePath + "grass_light.png",
-grassdark.src     = tilePath + "grass_dark.png",
-dirtblack.src     = tilePath + "dirt_black.png",
-dirtblacklong.src = tilePath + "dirt_black_long.png",
-cobblestone.src   = tilePath + "cobblestone.png",
-lava.src          = tilePath + "lava.png",
-white.src         = tilePath + "white.png";
+grass.src         = tilePath + "grass"            + tileExt,
+grasslight.src    = tilePath + "grass_light"      + tileExt,
+grassdark.src     = tilePath + "grass_dark"       + tileExt,
+dirtblack.src     = tilePath + "dirt_black"       + tileExt,
+dirtblacklong.src = tilePath + "dirt_black_long"  + tileExt,
+cobblestone.src   = tilePath + "cobblestone"      + tileExt,
+lava.src          = tilePath + "lava"             + tileExt,
+white.src         = tilePath + "white"            + tileExt;
+// water.src         = tilePath + "water"            + tileExt;
 
 function generateMap (
     // input
@@ -111,6 +114,7 @@ function generateMap (
     }
   };
   this.calculateTilesBase();
+  this.numberOfTiles = this.xTilesNumber * this.yTilesNumber;
 
   this.strokeAllTilesBase = function( ctx, color ) {
     ctx.save();
@@ -159,7 +163,9 @@ function generateMap (
   // this.whites();
 
   // this.cave();
-  this.river( 1, 1, 1, this.c.t.l, this.c.b.r );
+  // this.river( 5, 2000, 1, this.c.t.l, this.c.b.r );
+  // this.river( 10, 700 );
+  // this.river( 3, 1500 );
   // this.river(
   //   this.tiles[0][0],
   //   this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
@@ -182,7 +188,7 @@ generateMap.prototype.river = function( riverWidth, xBezier, yBezier, start, end
 
   for ( i = 0; i < river.length; i++ ) {
     if ( river[i] ) {
-      river[i].z = 10;
+      river[i].z = 25;
       river[i].type = lava;
     }
   }
@@ -228,11 +234,11 @@ generateMap.prototype.randomTileOnRandomEdge = function() {
 
 */
 generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezier, start, end ) {
-  // starting tile
+  // starting tile : passed argument or randomly generated tile on one of the edges
   var st = !start ? this.randomTileOnRandomEdge() : start; // random tile on random edge
   // m.ltp( st, "start" );
 
-  // ending tile
+  // ending tile : passed argument or randomly generated tile on one of the edges
   if ( end ) {
     et = end;
 
@@ -310,7 +316,7 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
                     if( b >= 0 && b < m.tiles[r].length ) {
                       river.push( m.tiles[a][b] )
                       var ab = m.tiles[a][b];
-                      l(ab.r + " " + ab.c);
+                      // l(ab.r + " " + ab.c);
                     }
                   }
                 }
@@ -327,6 +333,38 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
     }
   }
   return river;
+}
+
+generateMap.prototype.bezier = function( s, e, xB, yB ) {
+  // s - start tile
+  // e - end tile
+
+  var xx, yy, arr = [],
+
+      // since loop iterates over fraction numbers additional integer is needed to make
+      // integer addresses in returned array, hence c = 0
+      c = 0,
+      
+      // x and y last - used to compare with previous set of coordinates, to prevent writting
+      // duplicate coordinates
+      xl, yl,
+      
+      // bezier distortion 
+      xB = xB || 1, 
+      yB = yB || 1;
+  
+  for( i = 0; i <= 1; i += 0.001 ) {
+    xx = Math.round( (1 - i) * (1 - i) * s.xAbsolute + 2 * (1-i) * i * xB + i * i * e.xAbsolute );
+    yy = Math.round( (1 - i) * (1 - i) * s.yAbsolute + 2 * (1-i) * i * yB + i * i * e.yAbsolute );
+
+    // prevent writting duplicate coordinates to returned array and write them only if it's oryginal set
+    if ( xx !== xl && yy !== yl ) { arr[c] = [ xx, yy ] }
+    
+    c++;
+    xl = xx;
+    yl = yy;
+  }
+  return arr;
 }
 
 generateMap.prototype.cave = function() {
@@ -351,6 +389,25 @@ generateMap.prototype.cave = function() {
       t.z = 90;
     }
   }
+}
+
+generateMap.prototype.adjacentTiles = function( t ) {
+  // t : center tile
+
+/*
+    sorrounding tiles as array:
+    0 1 2
+    3 t 4
+    5 6 7
+    for each there is a set of coordinates in an array
+*/
+  
+  var arr = [
+    [ -1, 0 ], // 0
+    [ 0 ]
+  ];
+
+  return arr;
 }
 
 generateMap.prototype.startInHell = function() {
@@ -382,10 +439,10 @@ generateMap.prototype.startInHell = function() {
   }
   // randomly pull up tiles and turn them to stone
   if(typeof this.randomTile !== undefined) {
-      for(i = 0; i < 4500; i++) {
+      for(i = 0; i < ( Math.floor( that.numberOfTiles * 0.5 ) ); i++) {
         let rnd = that.randomTile();
         rnd.z -= Math.floor( (Math.random() * 15) );
-        rnd.type = cobblestone//that.randomType();
+        // rnd.type = cobblestone//that.randomType();
       }
   }
   // turn all tiles that have z = 0 to lava
@@ -526,48 +583,63 @@ generateMap.prototype.makeHighBump = function() {
       };
     }
 };
-generateMap.prototype.makeWall = function() {
-  let that = this;
-    let r = Math.floor((Math.random() * that.yTilesNumber));
-    let c = Math.floor((Math.random() * that.xTilesNumber));
-    // wlal length
-    let l = Math.floor((Math.random() * 30));
 
-    // Direction: 0 face bottom, 1 left bottom, 2 left, 3 left top, 4 top, 5 right top, 6 right, 7 right bottom
-    let d = Math.floor((Math.random() * 8));
+// Following functions take tile as an input and return adjacent tile
+generateMap.prototype.above = function( t ) {
+  var m = this,
+      r = t.r - 2,
+      c = t.c,
+      a = m.tiles[ r ][ c ];
+  return a
+}
 
-    switch(d){
-      case 0:
-        for(i = 0; i < l; i++) {
-          if( r !== undefined && c !== undefined ) {
-            that.tiles[r - 1][c + i].z -= 64;
-            r -= 1;
-          }
+generateMap.prototype.below = function( t ) {
+  var m = this,
+      r = t.r + 2,
+      c = r.c,
+      a = m.tiles[ r ][ c ];
+  return a
+}
 
-        };
-        break;
-      case 1:
-        // code
-        break;
-      case 2:
-        // code
-        break;
-      case 3:
-        // code
-        break;
-      case 4:
-        // code
-        break;
-      case 5:
-        // code
-        break;  
-      case 6:
-        // code
-        break;
-      case 7:
-        // code
-    }
-  };
+generateMap.prototype.right = function( t ) {
+  var m = this,
+      r = t.r,
+      c = t.c + 1,
+      a = m.tiles[ r ][ c ];
+  return a
+}
+generateMap.prototype.left = function( t ) {
+  var m = this,
+      r = t.r,
+      c = t.c - 1,
+      a = m.tiles[ r ][ c ];
+  return a
+}
+
+generateMap.prototype.aboveRight = function( t ) {
+  var m = this,
+      r = t.r - 1,
+      c = t.c % 2 !== 0 ? t.c : t.c + 1,
+      a = m.tiles[ r ][ c ];
+  return a
+}
+
+generateMap.prototype.aboveLeft = function( t ) {
+  var m = this,
+      c = t.c % 2 !== 0 ? t.c - 1 : t.c,
+      r = t.r - 1,
+      a = m.tiles[ r ][ c ];
+  return a
+}
+
+generateMap.prototype.belowRight = function( t ) {
+  var m = this,
+      c = t.c % 2 !== 0 ? t.c - 1 : t.c,
+      r = t.r + 1,
+      a = m.tiles[ r ][ c ];
+  return a
+}
+
 
 // writeTilesBase creates for each tile vector base which will be used
 // to calculate collision with player and other characters
