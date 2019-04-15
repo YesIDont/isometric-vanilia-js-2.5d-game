@@ -20,7 +20,7 @@ dirtblacklong.src = tilePath + "dirt_black_long"  + tileExt,
 cobblestone.src   = tilePath + "cobblestone"      + tileExt,
 lava.src          = tilePath + "lava"             + tileExt,
 white.src         = tilePath + "white"            + tileExt;
-// water.src         = tilePath + "water"            + tileExt;
+water.src         = tilePath + "water"            + tileExt;
 
 function generateMap (
     // input
@@ -158,14 +158,15 @@ function generateMap (
   // this.moveOneTile(37, 17, -10);
   // this.moveOneTile(35, 19, -20);
 
-  this.startInHell();
+  // this.startInHell();
+  this.grassStonStageAndRivers();
 
   // this.whites();
 
   // this.cave();
-  this.river( -15, dirtblack, 2, 2000, 1, this.c.t.l, this.c.b.r );
-  this.river( -10, dirtblack, 3, 700 );
-  // this.river( 3, 1500 );
+  this.river( 20, water, 2, 2000, 1, this.c.t.l, this.c.b.r );
+  this.river( 11, water, 3, 700 );
+  this.river( 30, water, 3, 1500 );
   // this.river(
   //   this.tiles[0][0],
   //   this.tiles[ this.tiles.length - 1 ][ this.tiles[0].length - 1 ],
@@ -453,6 +454,62 @@ generateMap.prototype.startInHell = function() {
        }
     }
   }
+}
+
+generateMap.prototype.grassStonStageAndRivers = function() {
+  this.tragicEnding = true;
+  var that = this;
+  // flatten map
+  // for(r = 0; r < that.tiles.length; r++) {
+  //   for(c = 0; c < that.tiles[r].length; c++) {
+  //       that.tiles[r][c].type = cobblestone;
+  //   }
+  // }
+  // create stone stage in center of the map
+  var rn = this.tiles.length / 2;
+  var cn = this.tiles[rn].length / 2;
+  for(r = -7; r < 7; r++) {
+    for(c = -5; c < 5; c++) {
+      this.tiles[rn + r][cn + c].z = -((Math.floor( (Math.random() * 10) )) + 5);
+      this.tiles[rn + r][cn + c].type = cobblestone;
+    }
+  }
+  for(r = -3; r < 3; r++) {
+    for(c = -3; c < 3; c++) {
+      this.tiles[rn + r][cn + c].z = -30;
+      that.tiles[rn + r][cn + c].type = cobblestone;
+    }
+  }
+  for(r = -2; r < 2; r++) {
+    for(c = -2; c < 2; c++) {
+      this.tiles[rn + r][cn + c].z = -50;
+      that.tiles[rn + r][cn + c].type = cobblestone;
+    }
+  }
+  // randomly pull up tiles and turn them to stone
+  if(typeof this.randomTile !== undefined) {
+      for(i = 0; i < ( Math.floor( that.numberOfTiles * 0.2 ) ); i++) {
+        let rnd = that.randomTile();
+        rnd.z -= Math.floor( (Math.random() * 23) );
+        rnd.type = cobblestone;
+      }
+  }
+  // randomly pull few tiles high in the air
+  if(typeof this.randomTile !== undefined) {
+      for(i = 0; i < ( Math.floor( that.numberOfTiles * 0.005 ) ); i++) {
+        let rnd = that.randomTile();
+        rnd.z = -93;
+        rnd.type = cobblestone;
+      }
+  }
+  // // turn all tiles that have z = 0 to water
+  // for(r = 0; r < that.tiles.length; r++) {
+  //   for(c = 0; c < that.tiles[r].length; c++) {
+  //      if ( that.tiles[r][c].z >= 0 ) {
+  //       that.tiles[r][c].type = grassdark;
+  //      }
+  //   }
+  // }
 }
 
 generateMap.prototype.whites = function() {

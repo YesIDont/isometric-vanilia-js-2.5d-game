@@ -207,7 +207,7 @@ createCharacter.prototype.whichTileIsStandingOn = function() {
               if( collision ) {
                 // t.playerStandsOnIt = true;
                 // p.lastTileStoodOn = t;
-                
+
                 return t;
             }
           }
@@ -520,7 +520,7 @@ createCharacter.prototype.move = function(m, p) {
   // current tile
   var l = p.lastTileStoodOn;
   p.lastTileStoodOn = p.whichTileIsStandingOn();
-  
+
   p.xV = 0;
   p.yV = 0;
 
@@ -601,7 +601,7 @@ createCharacter.prototype.move = function(m, p) {
   p.x += p.xV;
 
   if ( p.log.position ) { p.log.properties("g") }
-  
+
   // p.upZ(m, p);
   p.upY(m, p);
   p.upX(m, p);

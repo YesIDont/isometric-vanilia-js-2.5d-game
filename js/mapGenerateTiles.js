@@ -8,9 +8,9 @@ generateMap.prototype.createLayer = function() {
         r: r,
         c: c,
         // Absolute values describe coordinates for each tile in realtion to map top left corner.
-        // Next values are coordinates used when moving map relative to canvas.
         xAbsolute: that.calculateTile_x( r, c ),
         yAbsolute: that.calculateTile_y( r, c ),
+        // Next values are coordinates used when moving map relative to canvas.
         x: that.calculateTile_x( r, c ),
         y: that.calculateTile_y( r, c ),
         z: 0,

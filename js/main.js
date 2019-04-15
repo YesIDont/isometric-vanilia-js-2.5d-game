@@ -224,34 +224,33 @@ var animateGame = function () {
   // ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
 
   // ctx3.setTransform(1, 0, 0, 1, 0, 0);
-  // ctx3.clearRect(0, 0, canvasWidth, canvasHeight);  
-  
+  // ctx3.clearRect(0, 0, canvasWidth, canvasHeight);
 
-  player.collisionModel.testPosition(map, player);  
+  player.collisionModel.testPosition(map, player);
   player.move(map, player);
   map.render(player);
 
-  map.cameraUpdate(map, player.x, player.y, player.z);  
+  map.cameraUpdate(map, player.x, player.y, player.z);
 
   if(selectTool.enabled){selectTool.action()}
 
   devTools(ctx1);
-  
-  // requestAnimationFrame(animateGame);
 
-  if ( !map.tragicEnding ) {
-    requestAnimationFrame(animateGame);
-  } else {
-    if( player.z < 0 ) {
-      requestAnimationFrame(animateGame);
-    } else {
-      messageWindow("You died! Hit Space to restart.");
-      isGameOver = true;
-      document.addEventListener("keydown", function() {
-        if ( 32 in keysDown ) { location.reload() }
-      });
-    }    
-  }  
+  requestAnimationFrame(animateGame);
+
+  // if ( !map.tragicEnding ) {
+  //   requestAnimationFrame(animateGame);
+  // } else {
+  //   if( player.z < 1 ) {
+  //     requestAnimationFrame(animateGame);
+  //   } else {
+  //     messageWindow("You died! Hit Space to restart.");
+  //     isGameOver = true;
+  //     document.addEventListener("keydown", function() {
+  //       if ( 32 in keysDown ) { location.reload() }
+  //     });
+  //   }
+  // }
 };
 
 // Start animation right after page is loaded
