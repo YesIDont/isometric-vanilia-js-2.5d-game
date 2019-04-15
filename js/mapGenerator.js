@@ -146,7 +146,7 @@ function generateMap (
   // this.fallFromLeft();
   // this.fallFromTop();
   // this.makeHoles();
-  // this.makeBumps();
+  
 
   // this.makeHighBump();
   // this.makeWall();
@@ -173,7 +173,8 @@ function generateMap (
   //   550,
   //   1
   // );
-
+  this.makeBumps();
+  // this.fallFromLeft();
   this.findMaxAndMinZ();
 };
 
