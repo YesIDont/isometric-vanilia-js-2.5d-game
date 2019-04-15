@@ -42,7 +42,7 @@ generateMap.prototype.render = function(playerObject){
     }
   }
 
-  // player.animate(ctx1);
+  player.animate(ctx1);
 
   if ( map.renderSwitch ) {
     // render tiles above player's sprite

@@ -237,21 +237,21 @@ var animateGame = function () {
 
   devTools(ctx1);
   
-  requestAnimationFrame(animateGame);
+  // requestAnimationFrame(animateGame);
 
-  // if ( !map.tragicEnding ) {
-  //   requestAnimationFrame(animateGame);
-  // } else {
-  //   if( player.z !== 0 ) {
-  //     requestAnimationFrame(animateGame);
-  //   } else {
-  //     messageWindow("You died! Hit Space to restart.");
-  //     isGameOver = true;
-  //     document.addEventListener("keydown", function() {
-  //       if ( 32 in keysDown ) { location.reload() }
-  //     });
-  //   }    
-  // }  
+  if ( !map.tragicEnding ) {
+    requestAnimationFrame(animateGame);
+  } else {
+    if( player.z < 0 ) {
+      requestAnimationFrame(animateGame);
+    } else {
+      messageWindow("You died! Hit Space to restart.");
+      isGameOver = true;
+      document.addEventListener("keydown", function() {
+        if ( 32 in keysDown ) { location.reload() }
+      });
+    }    
+  }  
 };
 
 // Start animation right after page is loaded

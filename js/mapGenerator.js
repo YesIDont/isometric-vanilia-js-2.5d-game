@@ -158,13 +158,13 @@ function generateMap (
   // this.moveOneTile(37, 17, -10);
   // this.moveOneTile(35, 19, -20);
 
-  // this.startInHell();
+  this.startInHell();
 
   // this.whites();
 
   // this.cave();
-  // this.river( 5, 2000, 1, this.c.t.l, this.c.b.r );
-  // this.river( 10, 700 );
+  this.river( -15, dirtblack, 2, 2000, 1, this.c.t.l, this.c.b.r );
+  this.river( -10, dirtblack, 3, 700 );
   // this.river( 3, 1500 );
   // this.river(
   //   this.tiles[0][0],
@@ -181,15 +181,15 @@ function generateMap (
 // Generators - are deployed before the game start to calculate map shape
 //----------------------------------------
 
-generateMap.prototype.river = function( riverWidth, xBezier, yBezier, start, end ) {
+generateMap.prototype.river = function( level, tileType, riverWidth, xBezier, yBezier, start, end ) {
   var that = this;
 
   var river = that.tilesOnBezierCurve( riverWidth, xBezier, yBezier, start, end );
 
   for ( i = 0; i < river.length; i++ ) {
     if ( river[i] ) {
-      river[i].z = 25;
-      river[i].type = lava;
+      river[i].z = level;
+      river[i].type = tileType;
     }
   }
 }
@@ -273,13 +273,13 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
   {
     x = Math.round( (1 - i) * (1 - i) * st.xAbsolute + 2 * (1-i) * i * xB + i * i * et.xAbsolute );
     y = Math.round( (1 - i) * (1 - i) * st.yAbsolute + 2 * (1-i) * i * yB + i * i * et.yAbsolute );
-    
+
     rTemp = Math.round( y / m.tileHeightHalf );
     cTemp = Math.round( x / m.tileWidth );
 
     bezierPoly.pos.x = x;
-    bezierPoly.pos.y = y;      
-    
+    bezierPoly.pos.y = y;
+
     // loop over narrow area around tile and test collisions
     for( r = rTemp - w; r < rTemp + w; r++ ) {
       if( r >= 0 && r < m.tiles.length ) {
@@ -289,7 +289,7 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
 
             // set up the collision
             re = new SAT.Response();
-            re.clear();          
+            re.clear();
             col = bezierPoly.collidesWith(t.base, re); // test collision
 
             if ( col ) { // if collision is true
@@ -302,7 +302,7 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
                 w1 = w -1;
                 w4 = 0;
               }
-              
+
               // half of the width that will be equally redistributed on both sides
               // should not be less than zero
               w2 = Math.floor(w1 * 0.5);
@@ -327,7 +327,7 @@ generateMap.prototype.tilesOnBezierCurve = function( riverWidth, xBezier, yBezie
               // t.z = -8;
             }
             // river.push( t );
-          }  
+          }
         }
       }
     }
@@ -344,22 +344,22 @@ generateMap.prototype.bezier = function( s, e, xB, yB ) {
       // since loop iterates over fraction numbers additional integer is needed to make
       // integer addresses in returned array, hence c = 0
       c = 0,
-      
+
       // x and y last - used to compare with previous set of coordinates, to prevent writting
       // duplicate coordinates
       xl, yl,
-      
-      // bezier distortion 
-      xB = xB || 1, 
+
+      // bezier distortion
+      xB = xB || 1,
       yB = yB || 1;
-  
+
   for( i = 0; i <= 1; i += 0.001 ) {
     xx = Math.round( (1 - i) * (1 - i) * s.xAbsolute + 2 * (1-i) * i * xB + i * i * e.xAbsolute );
     yy = Math.round( (1 - i) * (1 - i) * s.yAbsolute + 2 * (1-i) * i * yB + i * i * e.yAbsolute );
 
     // prevent writting duplicate coordinates to returned array and write them only if it's oryginal set
     if ( xx !== xl && yy !== yl ) { arr[c] = [ xx, yy ] }
-    
+
     c++;
     xl = xx;
     yl = yy;
@@ -401,7 +401,7 @@ generateMap.prototype.adjacentTiles = function( t ) {
     5 6 7
     for each there is a set of coordinates in an array
 */
-  
+
   var arr = [
     [ -1, 0 ], // 0
     [ 0 ]
