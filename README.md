@@ -1,4 +1,4 @@
-# Soletaken
+# Isometric
 First game/app I ever made :D The work on it stopped 2 years ago, but I keep it because of sentiment.
 
 
