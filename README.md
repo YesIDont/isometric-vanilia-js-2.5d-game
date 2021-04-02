@@ -7,5 +7,5 @@ You can use arrow keys to move arround and spacebar to jump. Nothing else to do 
 
 Refresh page to generate new map.
 
-### Current Demo:
+### Demo:
 http://isometric.dysonspheregames.com
